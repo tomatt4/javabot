@@ -58,7 +58,6 @@ function createMainActionRow() {
   return buildRowsFromButtons([
     { customId: 'manage_modal:text', label: 'Editar texto', style: ButtonStyle.Secondary },
     { customId: 'manage_modal:media', label: 'Editar mídia', style: ButtonStyle.Secondary },
-    { customId: 'manage_modal:pix', label: 'Editar PIX', style: ButtonStyle.Secondary },
     { customId: 'manage_action:preview', label: 'Prévia', style: ButtonStyle.Secondary },
     { customId: 'manage_action:publish', label: 'Publicar', style: ButtonStyle.Secondary }
   ])[0];
@@ -110,8 +109,7 @@ function buildHomePanel(guildData, client) {
       `Título: ${guildData.panel.title}`,
       `Descrição: ${guildData.panel.description || 'não definida'}`,
       `Imagem: ${guildData.panel.imageUrl || 'não definida'}`,
-      `Banner: ${guildData.panel.bannerUrl || 'não definido'}`,
-      `PIX: ${guildData.panel.pix.key ? `${guildData.panel.pix.type} - ${guildData.panel.pix.key}` : 'não configurado'}`
+      `Banner: ${guildData.panel.bannerUrl || 'não definido'}`
     ].join('\n'))
   );
 
