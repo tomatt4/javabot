@@ -1,13 +1,14 @@
 module.exports = {
-  token: 'token do bot',
-  clientId: 'id do bot',
-  guildId: 'id do servidor',
+  token: process.env.TOKEN,
+  clientId: process.env.CLIENT_ID,
+  guildId: process.env.GUILD_ID,
 
   bot: {
     status: 'online',
     activityType: 'Watching',
-    activityName: 'by kezzynovo.' 
+    activityName: 'by kezzynovo.'
   },
+
   defaults: {
     accentColor: 0x2B2D31,
     panelTitle: 'Central de Atendimento',
@@ -21,10 +22,12 @@ module.exports = {
     saveToDisk: true,
     folder: './data/transcripts'
   },
+
   security: {
-    ownerPasswordSalt: 'troque-esta-salt-antes-de-usar'
+    ownerPasswordSalt: process.env.OWNER_PASSWORD_SALT
   },
+
   notes: {
-    appBio: 'A bio do aplicativo do bot não pode ser alterada por runtime via discord.js. Defina manualmente no Developer Portal: by kezzynovo.'
+    appBio: 'Configure a bio manualmente no Developer Portal.'
   }
 };
