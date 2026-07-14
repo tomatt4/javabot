@@ -4,9 +4,9 @@ module.exports = {
   guildId: process.env.GUILD_ID,
 
   bot: {
-    status: 'online',
+    status: 'idle',
     activityType: 'Watching',
-    activityName: 'by kezzynovo.'
+    activityName: 'bot de ticket'
   },
 
   defaults: {
