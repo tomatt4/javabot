@@ -125,17 +125,17 @@ function buildTicketMessage(guildData, ticket) {
       [
         `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**Ping:** <@&1500969290093039626>`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**Origem:** ${ticket.source?.label || 'não identificada'}`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
-        `-# ~~                                         ~~`,
+        `-# ~~                                                                                  ~~`,
         `**Se a equipe demorar demais para te atender**, clique no botão 'Notificar Equipe'.`
       ].join('\n')
     )
