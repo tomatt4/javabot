@@ -5,6 +5,7 @@ const { loadCommands } = require('./handlers/commandHandler');
 const { loadEvents } = require('./handlers/eventHandler');
 const { registerSlashCommands } = require('./handlers/registerCommands');
 const logger = require('./utils/logger');
+const http = require('node:http');
 
 const client = new Client({
   intents: [
@@ -55,6 +56,15 @@ process.on('unhandledRejection', (error) => {
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception detectada.', error);
+});
+
+const port = process.env.PORT || 3000;
+
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('Ticket bot online!');
+}).listen(port, '0.0.0.0', () => {
+  logger.info(`Servidor HTTP iniciado na porta ${port}.`);
 });
 
 boot();
