@@ -126,7 +126,7 @@ function buildTicketMessage(guildData, ticket) {
         `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `**Ping:** <@&1500969290093039626>`,
+        `**Ping:** nenhum(por enquanto)`,
         `-# ~~                                                                                  ~~`,
         `**Origem:** ${ticket.source?.label || 'não identificada'}`,
         `-# ~~                                                                                  ~~`,
