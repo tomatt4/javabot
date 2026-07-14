@@ -67,7 +67,6 @@ function renderConfigSummary(guildData) {
     `**Descrição:** ${guildData.panel.description || 'não definida'}`,
     `**Imagem:** ${guildData.panel.imageUrl || 'não definida'}`,
     `**Banner:** ${guildData.panel.bannerUrl || 'não definido'}`,
-    `**PIX:** ${guildData.panel.pix.key ? `${guildData.panel.pix.type} - ${guildData.panel.pix.key}` : 'não configurado'}`,
     `**Admins:** ${guildData.panel.admins.length}`,
     `**Cargos staff:** ${guildData.panel.staffRoles.length}`,
     `**Cargos gerente:** ${guildData.panel.managerRoles.length}`,
