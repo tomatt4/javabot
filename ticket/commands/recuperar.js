@@ -33,8 +33,8 @@ module.exports = {
 
     if (hash !== system.ownerPasswordHash) {
       const payload = buildContainerPayload({
-        title: 'Senha inválida',
-        body: 'A senha informada não confere com a senha cadastrada no sistema.',
+        title: 'SENHA ERRADA',
+        body: 'A senha informada não confere com a senha cadastrada no sistema. **Não tente burlar o sistema, isso pode gerar um banimento do servidor**.',
         accentColor: client.config.defaults.accentColor
       });
 
