@@ -92,16 +92,20 @@ function createSelectRows(selectMenus) {
 }
 
 function buildPublicPanelMessage(guildData) {
-  const container = new ContainerBuilder().setAccentColor(guildData.panel.accentColor);
-
-  container.addTextDisplayComponents(
-    new TextDisplayBuilder().setContent(`# ${guildData.panel.title}\n${guildData.panel.description}`)
-  );
+  const container = new ContainerBuilder()
+    .setAccentColor(guildData.panel.accentColor);
 
   const galleryComponent = buildGalleryComponent(guildData);
+
   if (galleryComponent) {
     container.addMediaGalleryComponents(galleryComponent);
   }
+
+  container.addTextDisplayComponents(
+    new TextDisplayBuilder().setContent(
+      `# ${guildData.panel.title}\n${guildData.panel.description}`
+    )
+  );
 
   const buttonRows = createButtonRows(guildData.panel.buttons);
   const selectRows = createSelectRows(guildData.panel.selectMenus);
@@ -121,9 +125,12 @@ function buildTicketMessage(guildData, ticket) {
       [
         `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
+        `**Ping:** <@&1500969290093039626>`,
         `**Origem:** ${ticket.source?.label || 'não identificada'}`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
-        `**Assumido por:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém ainda'}`
+        `**Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
+        `**ATENÇÃO: usuários abaixo do cargo Gerente devem pedir PERMISSÃO de quem assumiu para interferir no Ticket**.`,
+        `**Se a equipe demorar demais para te atender, clique no botão 'Notificar Equipe'.**`
       ].join('\n')
     )
   );
@@ -131,21 +138,20 @@ function buildTicketMessage(guildData, ticket) {
   container.addSeparatorComponents(new SeparatorBuilder());
 
   const buttonsRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('ticket_claim').setLabel('Assumir ticket').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_pix').setLabel('Chave PIX').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('Notificar usuário').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('Notificar staff').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_close').setLabel('Fechar ticket').setStyle(ButtonStyle.Danger)
+    new ButtonBuilder().setCustomId('ticket_claim').setLabel('Assumir Ticket').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('Notificar Usuário').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('Notificar Equipe').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('ticket_close').setLabel('Fechar Ticket').setStyle(ButtonStyle.Danger)
   );
 
   const staffRow = new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
       .setCustomId('ticket_staff_panel')
-      .setPlaceholder('Painel Staff')
+      .setPlaceholder('PAINEL ADMINISTRATIVO')
       .addOptions(
         { label: 'Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
         { label: 'Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
-        { label: 'Castigar usuário', value: 'punish', description: 'Aplica timeout no dono do ticket' },
+        { label: 'Mutar usuário', value: 'punish', description: 'Aplica mute no dono do ticket' },
         { label: 'Blacklist', value: 'blacklist', description: 'Impede novos tickets' }
       )
   );
@@ -165,7 +171,7 @@ async function sendLogMessage(guild, content, files = []) {
   if (!channel?.isTextBased()) return;
 
   const payload = buildContainerPayload({
-    title: 'Log do sistema',
+    title: 'Logs Atendimento Ticket',
     body: content,
     accentColor: guildData.panel.accentColor
   });
@@ -184,12 +190,12 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
 
     if (transcriptChannel?.isTextBased()) {
       const payload = buildContainerPayload({
-        title: 'Transcript HTML gerado',
+        title: 'Transcript HTML gerado.',
         body: [
           `**Ticket:** <#${ticket.channelId}>`,
           `**Usuário:** <@${ticket.ownerId}>`,
-          `**Fechado por:** <@${closedBy.id}>`,
-          `**Mensagens capturadas:** ${transcript.messageCount}`
+          `**Quem fechou:** <@${closedBy.id}>`,
+          `**Mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
       });
@@ -309,8 +315,8 @@ async function publishPanelToChannel(guild, channel, actor) {
 
 async function notifyUserInTicket(channel, ticket, guildData) {
   const payload = buildContainerPayload({
-    title: 'Notificação ao usuário',
-    body: `<@${ticket.ownerId}>, sua atenção foi solicitada neste ticket.`,
+    title: 'Notificação',
+    body: `**<@${ticket.ownerId}>, a equipe quer a sua resposta!**`,
     accentColor: guildData.panel.accentColor
   });
 
@@ -324,8 +330,8 @@ async function notifyUserInTicket(channel, ticket, guildData) {
 async function notifyStaffInTicket(channel, guildData) {
   const target = guildData.panel.pingRoleId ? `<@&${guildData.panel.pingRoleId}>` : '@here';
   const payload = buildContainerPayload({
-    title: 'Notificação à equipe',
-    body: `${target} atenção da equipe solicitada neste ticket.`,
+    title: 'Notificação',
+    body: `||${target}|| Equipe do servidor chamada. Aguarde.`,
     accentColor: guildData.panel.accentColor
   });
 
