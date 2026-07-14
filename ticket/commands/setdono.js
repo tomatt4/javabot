@@ -21,8 +21,8 @@ module.exports = {
 
     if (system.ownerId && system.ownerPasswordHash) {
       const payload = buildContainerPayload({
-        title: 'Dono já definido',
-        body: 'O dono do bot já foi definido. Use `/recuperar` se precisar retomar a posse.',
+        title: '<:white_owner_swy:1526728241224749230> Dono já existente',
+        body: 'O dono do bot é o Mattzaddas.',
         accentColor: client.config.defaults.accentColor
       });
 
@@ -37,7 +37,7 @@ module.exports = {
     await saveSystemData(system);
 
     const payload = buildContainerPayload({
-      title: 'Dono configurado',
+      title: '<:white_owner_swy:1526728241224749230> Dono configurado',
       body: `Dono definido com sucesso como <@${interaction.user.id}>. Guarde a senha com cuidado.`,
       accentColor: client.config.defaults.accentColor
     });
