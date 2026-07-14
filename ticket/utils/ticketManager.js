@@ -128,15 +128,13 @@ function buildTicketMessage(guildData, ticket) {
         `-# ~~                                                                                  ~~`,
         `**Ping:** nenhum(por enquanto)`,
         `-# ~~                                                                                  ~~`,
-        `**Origem:** ${ticket.source?.label || 'não identificada'}`,
-        `-# ~~                                                                                  ~~`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
         `**Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
         `**ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
         `-# ~~                                                                                  ~~`,
-        `**Se a equipe demorar demais para te atender**, clique no botão 'Notificar Equipe'.`
+        `**Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**'.`
       ].join('\n')
     )
   );
@@ -214,7 +212,7 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
 
   await sendLogMessage(
     guild,
-    `Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por <@${closedBy.id}>.`,
+    `Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.user.username}.`,
     [transcript.attachment]
   );
 }
@@ -279,7 +277,7 @@ async function createTicketChannel(client, guild, user, source) {
     });
   }
 
-  const name = `ticket-${String(ticketNumber).padStart(4, '0')}`;
+  const name = `ticket-${interaction.user.username}`;
 
   const channel = await guild.channels.create({
     name,
