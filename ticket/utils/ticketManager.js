@@ -197,8 +197,8 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
         title: 'Transcript HTML gerado.',
         body: [
           `**Ticket:** <#${ticket.channelId}>`,
-          `**Usuário:** <@${ticket.user.username}>`,
-          `**Quem fechou:** <@${closedBy.user.username}>`,
+          `**Usuário:** ${ticket.username}`,
+          `**Quem fechou:** ${closedBy.username}`,
           `**Mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
@@ -212,7 +212,7 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
 
   await sendLogMessage(
     guild,
-    `Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.user.username}.`,
+    `Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.username}.`,
     [transcript.attachment]
   );
 }
@@ -313,7 +313,7 @@ async function publishPanelToChannel(guild, channel, actor) {
     sentAt: new Date().toISOString()
   });
 
-  await sendLogMessage(guild, `${actor.user.username} publicou o painel de tickets em <#${channel.id}>.`);
+  await sendLogMessage(guild, `${actor.username} publicou o painel de tickets em <#${channel.id}>.`);
   return message;
 }
 
