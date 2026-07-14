@@ -481,11 +481,8 @@ async function handleTicketButton(client, interaction) {
     }
 
     case 'ticket_notify_staff': {
-      if (!(await canUseStaffActions(interaction, guildData))) {
-        return replyNotice(interaction, 'Sem permissão', 'Você não tem permissão para usar essa ação.', guildData.panel.accentColor);
-      }
-
       await notifyStaffInTicket(interaction.channel, guildData);
+      
       return replyNotice(interaction, 'Staff notificada', 'A equipe foi notificada com sucesso no ticket.', guildData.panel.accentColor);
     }
 
@@ -494,7 +491,7 @@ async function handleTicketButton(client, interaction) {
         return replyNotice(interaction, 'Sem permissão', 'Você não tem permissão para fechar tickets.', guildData.panel.accentColor);
       }
 
-      await replyNotice(interaction, 'Fechando ticket', 'Fechando ticket e gerando transcript HTML...', guildData.panel.accentColor);
+      await replyNotice(interaction, 'Fechando ticket', 'Fechando ticket...', guildData.panel.accentColor);
       await closeTicketAndArchive(client, interaction.guild, interaction.channel, ticket, interaction.user);
       return;
     }
