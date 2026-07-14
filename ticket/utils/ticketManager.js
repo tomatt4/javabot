@@ -197,8 +197,8 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
         title: 'Transcript HTML gerado.',
         body: [
           `**Ticket:** <#${ticket.channelId}>`,
-          `**Usuário:** <@${ticket.ownerId}>`,
-          `**Quem fechou:** <@${closedBy.id}>`,
+          `**Usuário:** <@${ticket.user.username}>`,
+          `**Quem fechou:** <@${closedBy.user.username}>`,
           `**Mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
@@ -277,13 +277,13 @@ async function createTicketChannel(client, guild, user, source) {
     });
   }
 
-  const name = `ticket-${interaction.user.username}`;
+  const name = `ticket-${user.username}`;
 
   const channel = await guild.channels.create({
     name,
     type: ChannelType.GuildText,
     parent: guildData.ticket.categoryId || undefined,
-    topic: `ticket_owner:${user.id}`,
+    topic: `clicar em 'Fechar Ticket' pra fechar o Ticket`,
     permissionOverwrites: overwrites,
     reason: `Ticket aberto por ${user.tag}`
   });
@@ -313,7 +313,7 @@ async function publishPanelToChannel(guild, channel, actor) {
     sentAt: new Date().toISOString()
   });
 
-  await sendLogMessage(guild, `<@${actor.id}> publicou o painel de tickets em <#${channel.id}>.`);
+  await sendLogMessage(guild, `${actor.user.username} publicou o painel de tickets em <#${channel.id}>.`);
   return message;
 }
 
@@ -348,7 +348,7 @@ async function notifyStaffInTicket(channel, guildData) {
 }
 
 async function claimTicket(guild, user, ticket) {
-  await sendLogMessage(guild, `<@${user.id}> assumiu o ticket <#${ticket.channelId}>.`);
+  await sendLogMessage(guild, `<@${user.username}> assumiu o ticket <#${ticket.channelId}>.`);
   return updateTicket(ticket.channelId, { claimedBy: user.id });
 }
 
@@ -365,7 +365,7 @@ async function closeTicketAndArchive(client, guild, channel, ticket, closedBy) {
   await sendLogMessage(guild, `Ticket <#${ticket.channelId}> será excluído em alguns segundos.`);
 
   setTimeout(async () => {
-    await channel.delete(`Ticket fechado por ${closedBy.tag}`).catch((error) => {
+    await channel.delete(`Ticket fechado por ${closedBy.username}`).catch((error) => {
       logger.error('Falha ao excluir o canal do ticket.', error);
     });
   }, client.config.defaults.closeDeleteDelayMs);
