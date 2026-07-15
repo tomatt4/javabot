@@ -1,18 +1,17 @@
-const Discord = require("discord.js");
-const { buildContainerPayload, asV2Message } = require("../utils/ui"); 
-// Certifique-se de que o caminho relativo acima aponta corretamente para a pasta do ui.js!
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const path = require("path");
+// Busca o ui.js de forma totalmente segura usando o path
+const { buildContainerPayload, asV2Message } = require(path.join(process.cwd(), "utils/ui"));
 
 module.exports = {
-    name: "unlock", 
-    description: "Abra um canal.",
-    type: Discord.ApplicationCommandType.ChatInput,
-    
-    run: async(client, interaction) => {
-        // Verifica se o usuário tem a permissão de Gerenciar Canais
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels)) {
-            return interaction.reply({ content: `<:negativobranco:1525565869407736029> Você não possui a permissão \`Gerenciar Canais\` para usar este comando.`, ephemeral: true });
-        }
+    // 1. O seu handler exige a propriedade "data"
+    data: new SlashCommandBuilder()
+        .setName("unlock")
+        .setDescription("Abra um canal")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels), // Limita o comando para quem gerencia canais direto no Discord
 
+    // 2. O seu handler exige a função "execute"
+    async execute(interaction) {
         try {
             // Modifica as permissões do canal para permitir que membros enviem mensagens novamente
             await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: true });
@@ -24,7 +23,7 @@ module.exports = {
                     "**Esse canal foi destrancado.**",
                     `Destrancado por: ${interaction.user}`
                 ].join('\n'),
-                accentColor: 0 // Cor preta em formato numérico para o ContainerBuilder
+                accentColor: 0 // Cor preta
             });
 
             // Responde utilizando o formatador V2 do seu bot
@@ -32,7 +31,7 @@ module.exports = {
 
         } catch (error) {
             console.error(error);
-            interaction.reply({ content: `<:negativobranco:1525565869407736029> Ops, algo deu errado ao tentar destrancar este chat.`, ephemeral: true });
+            await interaction.reply({ content: `<:negativobranco:1525565869407736029> Ops, algo deu errado ao tentar destrancar este chat.`, ephemeral: true });
         }
     }        
 };
