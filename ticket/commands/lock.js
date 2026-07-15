@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { buildContainerPayload, asV2Message } = require("../../ticket/utils/ui"); 
+const { buildContainerPayload, asV2Message } = require("../ticket/utils/ui"); 
 // Certifique-se de que o caminho relativo acima aponta corretamente para a pasta do ui.js!
 
 module.exports = {
