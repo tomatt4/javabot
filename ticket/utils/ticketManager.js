@@ -133,9 +133,9 @@ function buildTicketMessage(guildData, ticket) {
         `-# ~~                                                                                  ~~`,
         `<:safety:1525566462406950954> **Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
-        `<a:white_exclamation:1526717172825718856> **ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
+        `**ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
         `-# ~~                                                                                  ~~`,
-        `<a:white_exclamation:1526717172825718856> **Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**'.`
+        `**Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**'.`
       ].join('\n')
     )
   );
@@ -181,7 +181,10 @@ async function sendLogMessage(guild, content, files = []) {
     accentColor: guildData.panel.accentColor
   });
 
-  await channel.send(asV2Message(payload, { files })).catch((error) => {
+  await channel.send({
+    ...asV2Message(payload),
+    files: files
+  }).catch((error) => {
     logger.error('Falha ao enviar log para o canal configurado.', error);
   });
 }
@@ -228,7 +231,10 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
         accentColor: guildData.panel.accentColor
       });
 
-      await transcriptChannel.send(asV2Message(payload, { files: [transcript.attachment] })).catch((error) => {
+      await transcriptChannel.send({
+        ...asV2Message(payload),
+        files: [transcript.attachment]
+      }).catch((error) => {
         logger.error('Falha ao enviar transcript para o canal de logs.', error);
       });
     }
