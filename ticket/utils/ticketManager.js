@@ -22,6 +22,7 @@ const {
 const { chunkArray } = require('./helpers');
 const { createTranscriptFile } = require('./transcript');
 const { buildContainerPayload, asV2Message } = require('./ui');
+const config = require('ticket/config.js');
 
 function buildGalleryComponent(guildData) {
   const items = [];
@@ -398,7 +399,7 @@ async function closeTicketAndArchive(client, guild, channel, ticket, closedBy) {
     await channel.delete(`<:n_ticket:1526716703520723014> Ticket encerrado por ${closedBy.username}`).catch((error) => {
       logger.error('<:negativobranco:1525565869407736029> Falha ao excluir o canal do ticket:', error);
     });
-  }, client.config.defaults.closeDeleteDelayMs);
+  }, config.defaults.closeDeleteDelayMs || 5000);
 }
 
 module.exports = {
