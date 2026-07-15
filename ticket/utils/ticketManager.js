@@ -153,10 +153,10 @@ function buildTicketMessage(guildData, ticket) {
       .setCustomId('ticket_staff_panel')
       .setPlaceholder('Menu Moderativo')
       .addOptions(
-        { label: '<:pureza_i:1526782791394787330> Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
-        { label: '<:members:1525579493375213700> Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
-        { label: '<:white_timeout:1526784354590654537> Mutar usuário', value: 'punish', description: 'Aplica mute no dono do ticket' },
-        { label: '<:negativobranco:1525565869407736029> Blacklist', value: 'blacklist', description: 'Impede novos tickets' }
+        { label: 'Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
+        { label: 'Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
+        { label: 'Mutar usuário', value: 'punish', description: 'Aplica mute no dono do ticket' },
+        { label: 'Blacklist', value: 'blacklist', description: 'Impede novos tickets' }
       )
   );
 
@@ -193,23 +193,52 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
       || await guild.channels.fetch(guildData.logs.transcriptChannelId).catch(() => null);
 
     if (transcriptChannel?.isTextBased()) {
+      
+      // 1. Tenta buscar o dono do ticket no servidor para pegar o username atualizado
+      let ownerName = 'Usuário Desconhecido';
+      try {
+        const ownerMember = await guild.members.fetch(ticket.ownerId);
+        ownerName = ownerMember.user.username;
+      } catch {
+        // Fallback caso o usuário tenha saído do servidor
+        ownerName = ticket.username || `<@${ticket.ownerId}>`;
+      }
+
+      // 2. Tenta buscar quem assumiu o ticket para pegar o username
+      let staffName = 'Ninguém';
+      if (ticket.claimedBy) {
+        try {
+          const staffMember = await guild.members.fetch(ticket.claimedBy);
+          staffName = staffMember.user.username;
+        } catch {
+          staffName = `ID: ${ticket.claimedBy}`;
+        }
+      }
+
       const payload = buildContainerPayload({
         title: 'Transcript HTML gerado.',
         body: [
           `<:n_ticket:1526716703520723014> **Ticket:** <#${ticket.channelId}>`,
-          `<:members:1525579493375213700> **Usuário:** ${ticket.username}`,
+          `<:members:1525579493375213700> **Usuário:** ${ownerName}`,
           `<:safety:1525566462406950954> **Quem fechou:** ${closedBy.username}`,
-          `<:check:1525566649384702023> **Quem assumiu:** ${claimedBy.username}`
-          `<:mensagem:1525579173945671781> Mensagens totais:** ${transcript.messageCount}`
+          `<:check:1525566649384702023> **Quem assumiu:** ${staffName}`,
+          `<:mensagem:1525579173945671781> **Mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
       });
 
       await transcriptChannel.send(asV2Message(payload, { files: [transcript.attachment] })).catch((error) => {
-        logger.error('Falha ao enviar transcript.', error);
+        logger.error('Falha ao enviar transcript para o canal de logs.', error);
       });
     }
   }
+
+  await sendLogMessage(
+    guild,
+    `<:prompt:1525566421268955156> Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.username}.`,
+    [transcript.attachment]
+  );
+}
 
   await sendLogMessage(
     guild,
