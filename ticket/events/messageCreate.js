@@ -2,7 +2,7 @@ const { saveMessageToTicket } = require('../utils/database');
 
 module.exports = {
   name: 'messageCreate',
-  async execute(message)
+  async execute(message) {
     if (!message || !message.author) return;
     if (message.author.bot) return;
 
