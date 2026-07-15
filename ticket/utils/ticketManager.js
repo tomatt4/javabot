@@ -349,7 +349,7 @@ async function publishPanelToChannel(guild, channel, actor) {
 
 async function notifyUserInTicket(channel, ticket, guildData) {
   const payload = buildContainerPayload({
-    title: '<a:white_exclamation:1526717172825718856> notificação',
+    title: '<:0_bow:1527039332672733216>  notificação',
     body: `**<@${ticket.ownerId}>, a equipe quer a sua resposta!**`,
     accentColor: guildData.panel.accentColor
   });
