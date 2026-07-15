@@ -126,7 +126,7 @@ function buildTicketMessage(guildData, ticket) {
         `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `**Ping:** nenhum(por enquanto)`,
+        `**Ping:** <@&1500969290093039626>`,
         `-# ~~                                                                                  ~~`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
@@ -151,7 +151,7 @@ function buildTicketMessage(guildData, ticket) {
   const staffRow = new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
       .setCustomId('ticket_staff_panel')
-      .setPlaceholder('PAINEL ADMINISTRATIVO')
+      .setPlaceholder('Menu Moderativo')
       .addOptions(
         { label: 'Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
         { label: 'Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
@@ -335,7 +335,7 @@ async function notifyStaffInTicket(channel, guildData) {
   const target = guildData.panel.pingRoleId ? `<@&${guildData.panel.pingRoleId}>` : '@here';
   const payload = buildContainerPayload({
     title: 'Notificação',
-    body: `||${target}|| Equipe do servidor chamada. Aguarde.`,
+    body: `${target} Equipe do servidor chamada. Aguarde.`,
     accentColor: guildData.panel.accentColor
   });
 
