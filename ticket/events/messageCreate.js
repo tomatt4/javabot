@@ -1,4 +1,4 @@
-const { saveMessageToTicket } = require('ticket/utils/database');
+const { saveMessageToTicket } = require('../database');
 
 module.exports = {
   name: 'messageCreate',
