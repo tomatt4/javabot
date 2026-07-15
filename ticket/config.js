@@ -6,7 +6,7 @@ module.exports = {
   bot: {
     status: 'idle',
     activityType: 'Watching',
-    activityName: 'bot de ticket'
+    activityName: 'watashinokoto, itoshi teru?'
   },
 
   defaults: {
