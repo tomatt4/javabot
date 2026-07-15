@@ -123,18 +123,18 @@ function buildTicketMessage(guildData, ticket) {
   container.addTextDisplayComponents(
     new TextDisplayBuilder().setContent(
       [
-        `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
-        `**Usuário:** <@${ticket.ownerId}>`,
+        `# <:n_ticket:1526716703520723014> Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
+        `<:members:1525579493375213700> **Usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `**Ping:** <@&1500969290093039626>`,
+        `<:anncio:1526784690911055925> **Ping:** sei la `,
         `-# ~~                                                                                  ~~`,
-        `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
+        `<:calendar:1525579207818608682> **Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
-        `**Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
+        `<:safety:1525566462406950954> **Staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'Ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
-        `**ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
+        `<a:white_exclamation:1526717172825718856> **ATENÇÃO**: usuários abaixo do cargo Gerente devem pedir **PERMISSÃO** de quem assumiu para interferir no Ticket.`,
         `-# ~~                                                                                  ~~`,
-        `**Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**'.`
+        `<a:white_exclamation:1526717172825718856> **Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**'.`
       ].join('\n')
     )
   );
@@ -142,10 +142,10 @@ function buildTicketMessage(guildData, ticket) {
   container.addSeparatorComponents(new SeparatorBuilder());
 
   const buttonsRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('ticket_claim').setLabel('Assumir Ticket').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('Notificar Usuário').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('Notificar Equipe').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_close').setLabel('Fechar Ticket').setStyle(ButtonStyle.Danger)
+    new ButtonBuilder().setCustomId('ticket_claim').setLabel('Assumir Ticket').setStyle(ButtonStyle.Secondary).setEmoji('<:check:1525566649384702023>'),
+    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('Notificar Usuário').setStyle(ButtonStyle.Secondary).setEmoji('<a:white_exclamation:1526717172825718856>'),
+    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('Notificar Equipe').setStyle(ButtonStyle.Secondary).setEmoji('<:anncio:1526784690911055925>'),
+    new ButtonBuilder().setCustomId('ticket_close').setLabel('Fechar Ticket').setStyle(ButtonStyle.Danger).setEmoji('<:negativobranco:1525565869407736029>')
   );
 
   const staffRow = new ActionRowBuilder().addComponents(
@@ -153,10 +153,10 @@ function buildTicketMessage(guildData, ticket) {
       .setCustomId('ticket_staff_panel')
       .setPlaceholder('Menu Moderativo')
       .addOptions(
-        { label: 'Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
-        { label: 'Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
-        { label: 'Mutar usuário', value: 'punish', description: 'Aplica mute no dono do ticket' },
-        { label: 'Blacklist', value: 'blacklist', description: 'Impede novos tickets' }
+        { label: '<:pureza_i:1526782791394787330> Banir usuário', value: 'ban', description: 'Bane o dono do ticket' },
+        { label: '<:members:1525579493375213700> Adicionar usuário no ticket', value: 'add_user', description: 'Libera o acesso de outro usuário' },
+        { label: '<:white_timeout:1526784354590654537> Mutar usuário', value: 'punish', description: 'Aplica mute no dono do ticket' },
+        { label: '<:negativobranco:1525565869407736029> Blacklist', value: 'blacklist', description: 'Impede novos tickets' }
       )
   );
 
@@ -175,7 +175,7 @@ async function sendLogMessage(guild, content, files = []) {
   if (!channel?.isTextBased()) return;
 
   const payload = buildContainerPayload({
-    title: 'Logs Atendimento Ticket',
+    title: '<:anncio:1526784690911055925> Logs Atendimento Ticket',
     body: content,
     accentColor: guildData.panel.accentColor
   });
@@ -196,10 +196,11 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
       const payload = buildContainerPayload({
         title: 'Transcript HTML gerado.',
         body: [
-          `**Ticket:** <#${ticket.channelId}>`,
-          `**Usuário:** ${ticket.username}`,
-          `**Quem fechou:** ${closedBy.username}`,
-          `**Mensagens totais:** ${transcript.messageCount}`
+          `<:n_ticket:1526716703520723014> **Ticket:** <#${ticket.channelId}>`,
+          `<:members:1525579493375213700> **Usuário:** ${ticket.username}`,
+          `<:safety:1525566462406950954> **Quem fechou:** ${closedBy.username}`,
+          `<:check:1525566649384702023> **Quem assumiu:** ${claimedBy.username}`
+          `<:mensagem:1525579173945671781> Mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
       });
@@ -212,7 +213,7 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
 
   await sendLogMessage(
     guild,
-    `Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.username}.`,
+    `<:prompt:1525566421268955156> Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.username}.`,
     [transcript.attachment]
   );
 }
@@ -313,13 +314,13 @@ async function publishPanelToChannel(guild, channel, actor) {
     sentAt: new Date().toISOString()
   });
 
-  await sendLogMessage(guild, `${actor.username} publicou o painel de tickets em <#${channel.id}>.`);
+  await sendLogMessage(guild, `<:safety:1525566462406950954> ${actor.username} publicou o painel de tickets em <#${channel.id}>.`);
   return message;
 }
 
 async function notifyUserInTicket(channel, ticket, guildData) {
   const payload = buildContainerPayload({
-    title: 'Notificação',
+    title: '<a:white_exclamation:1526717172825718856> Notificação',
     body: `**<@${ticket.ownerId}>, a equipe quer a sua resposta!**`,
     accentColor: guildData.panel.accentColor
   });
@@ -334,7 +335,7 @@ async function notifyUserInTicket(channel, ticket, guildData) {
 async function notifyStaffInTicket(channel, guildData) {
   const target = guildData.panel.pingRoleId ? `<@&${guildData.panel.pingRoleId}>` : '@here';
   const payload = buildContainerPayload({
-    title: 'Notificação',
+    title: '<a:white_exclamation:1526717172825718856> Notificação',
     body: `${target} Equipe do servidor chamada. Aguarde.`,
     accentColor: guildData.panel.accentColor
   });
@@ -348,7 +349,7 @@ async function notifyStaffInTicket(channel, guildData) {
 }
 
 async function claimTicket(guild, user, ticket) {
-  await sendLogMessage(guild, `<@${user.username}> assumiu o ticket <#${ticket.channelId}>.`);
+  await sendLogMessage(guild, `<:safety:1525566462406950954> ${user.username} assumiu o ticket <#${ticket.channelId}>.`);
   return updateTicket(ticket.channelId, { claimedBy: user.id });
 }
 
@@ -362,11 +363,11 @@ async function closeTicketAndArchive(client, guild, channel, ticket, closedBy) {
     closedAt: new Date().toISOString()
   });
 
-  await sendLogMessage(guild, `Ticket <#${ticket.channelId}> será excluído em alguns segundos.`);
+  await sendLogMessage(guild, `<:n_ticket:1526716703520723014> Ticket <#${ticket.channelId}> sendo encerrado por ${closedBy.username}...`);
 
   setTimeout(async () => {
-    await channel.delete(`Ticket fechado por ${closedBy.username}`).catch((error) => {
-      logger.error('Falha ao excluir o canal do ticket.', error);
+    await channel.delete(`<:n_ticket:1526716703520723014> Ticket encerrado por ${closedBy.username}`).catch((error) => {
+      logger.error('<:negativobranco:1525565869407736029> Falha ao excluir o canal do ticket:', error);
     });
   }, client.config.defaults.closeDeleteDelayMs);
 }
