@@ -22,7 +22,7 @@ const {
 const { chunkArray } = require('./helpers');
 const { createTranscriptFile } = require('./transcript');
 const { buildContainerPayload, asV2Message } = require('./ui');
-const config = require('ticket/config');
+const config = require('../config');
 
 function buildGalleryComponent(guildData) {
   const items = [];
