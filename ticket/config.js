@@ -20,7 +20,7 @@ module.exports = {
 
   transcript: {
     saveToDisk: true,
-    folder: './data/transcripts'
+    folder: 'ticket/data/transcripts'
   },
 
   security: {
