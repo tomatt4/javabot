@@ -127,7 +127,7 @@ function buildTicketMessage(guildData, ticket) {
         `# <:n_ticket:1526716703520723014> Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `<:members:1525579493375213700> **Usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `<:anncio:1526784690911055925> **Ping:** sei la `,
+        `<:anncio:1526784690911055925> **Ping:** <@&1500969290093039626> `,
         `-# ~~                                                                                  ~~`,
         `<:calendar:1525579207818608682> **Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
