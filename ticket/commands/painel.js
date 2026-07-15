@@ -14,7 +14,7 @@ module.exports = {
 
     if (!(await canManagePanel(interaction, guildData))) {
       const payload = buildContainerPayload({
-        title: 'Acesso negado',
+        title: '<:negativobranco:1525565869407736029> ACESSO NEGADO',
         body: 'Você não tem permissão para abrir o painel de gerenciamento.',
         accentColor: guildData.panel.accentColor
       });
