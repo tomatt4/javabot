@@ -22,7 +22,7 @@ const {
 const { chunkArray } = require('./helpers');
 const { createTranscriptFile } = require('./transcript');
 const { buildContainerPayload, asV2Message } = require('./ui');
-const config = require('ticket/config.js');
+const config = require('ticket/config');
 
 function buildGalleryComponent(guildData) {
   const items = [];
@@ -233,13 +233,6 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
       });
     }
   }
-
-  await sendLogMessage(
-    guild,
-    `<:prompt:1525566421268955156> Transcript gerado para o ticket <#${ticket.channelId}>. Fechado por ${closedBy.username}.`,
-    [transcript.attachment]
-  );
-}
 
   await sendLogMessage(
     guild,
