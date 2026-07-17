@@ -20,7 +20,8 @@ const {
   findOpenTicketByUser,
   addUserToBlacklist,
   getTicketByChannelId,
-  addExtraUserToTicket
+  addExtraUserToTicket,
+  updateTicket
 } = require('../utils/database');
 const {
   buildTicketMessage,
@@ -270,10 +271,34 @@ async function handlePublicPanelInteraction(client, interaction) {
     return replyNotice(interaction, 'Acesso bloqueado', 'Você está em blacklist e não pode abrir tickets neste servidor.', guildData.panel.accentColor);
   }
 
-  const existingTicket = await findOpenTicketByUser(interaction.guild.id, interaction.user.id);
-  if (existingTicket && client.config.defaults.preventMultipleOpenTickets) {
-    return replyNotice(interaction, 'Ticket já aberto', `Você já possui um ticket aberto: <#${existingTicket.channelId}>`, guildData.panel.accentColor);
+  const existingTicket = await findOpenTicketByUser(
+  interaction.guild.id,
+  interaction.user.id
+);
+
+if (existingTicket) {
+  // Verifica se o canal realmente existe
+  const existingChannel = await interaction.guild.channels
+    .fetch(existingTicket.channelId)
+    .catch(() => null);
+
+  if (!existingChannel) {
+    // Ticket fantasma.
+    // Fecha automaticamente no banco.
+    await updateTicket(existingTicket.channelId, {
+      status: "closed",
+      closedAt: new Date().toISOString(),
+      closedBy: "SYSTEM"
+    });
+  } else if (client.config.defaults.preventMultipleOpenTickets) {
+    return replyNotice(
+      interaction,
+      "Ticket já aberto",
+      `Você já possui um ticket aberto: <#${existingTicket.channelId}>`,
+      guildData.panel.accentColor
+    );
   }
+} 
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
