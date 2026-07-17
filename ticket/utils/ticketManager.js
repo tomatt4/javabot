@@ -143,7 +143,7 @@ function buildTicketMessage(guildData, ticket) {
   container.addSeparatorComponents(new SeparatorBuilder());
 
   const buttonsRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('ticket_claim').setLabel('assumir ticket').setStyle(ButtonStyle.Sucess).setEmoji('<a:016_choc:1527039252578172958>'),
+    new ButtonBuilder().setCustomId('ticket_claim').setLabel('assumir ticket').setStyle(ButtonStyle.Success).setEmoji('<a:016_choc:1527039252578172958>'),
     new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('notificar usuário').setStyle(ButtonStyle.Secondary).setEmoji('<:043_gingerbread:1527039317472448572>'),
     new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('notificar equipe').setStyle(ButtonStyle.Secondary).setEmoji('<:COSbroldTV:1527039618300514475>'),
     new ButtonBuilder().setCustomId('ticket_close').setLabel('fechar ticket').setStyle(ButtonStyle.Danger).setEmoji('<:0_bow:1527039332672733216> ')
