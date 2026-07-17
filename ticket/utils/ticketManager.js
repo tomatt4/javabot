@@ -124,14 +124,14 @@ function buildTicketMessage(guildData, ticket) {
   container.addTextDisplayComponents(
     new TextDisplayBuilder().setContent(
       [
-        `# <:0_bow:1527039332672733216> ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
+        `# <:Cosbrletters:1527054372020949055> ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `<:0_bow:1527039332672733216> **usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `<:0_bow:1527039332672733216> **ping:** nenhum por enquanto `,
+        `<:COScoheedesu:1527041563455258796> **ping:** nenhum por enquanto `,
         `-# ~~                                                                                  ~~`,
-        `<:0_bow:1527039332672733216> **aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
+        `<:emoji_174:1527054420821540978> **aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
-        `<:0_bow:1527039332672733216>  **staff que Assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém por enquanto.'}`,
+        `<a:016_choc:1527039252578172958>  **staff que assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
         `**atenção**: usuários abaixo do cargo /ceo devem pedir **permissão** de quem assumiu para interferir no Ticket.`,
         `-# ~~                                                                                  ~~`,
@@ -143,16 +143,16 @@ function buildTicketMessage(guildData, ticket) {
   container.addSeparatorComponents(new SeparatorBuilder());
 
   const buttonsRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('ticket_claim').setLabel('assumir ticket').setStyle(ButtonStyle.Secondary).setEmoji('<:0_bow:1527039332672733216> '),
-    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('notificar usuário').setStyle(ButtonStyle.Secondary).setEmoji('<:0_bow:1527039332672733216> '),
-    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('notificar Equipe').setStyle(ButtonStyle.Secondary).setEmoji('<:0_bow:1527039332672733216> '),
+    new ButtonBuilder().setCustomId('ticket_claim').setLabel('assumir ticket').setStyle(ButtonStyle.Sucess).setEmoji('<a:016_choc:1527039252578172958>'),
+    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('notificar usuário').setStyle(ButtonStyle.Secondary).setEmoji('<:043_gingerbread:1527039317472448572>'),
+    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('notificar equipe').setStyle(ButtonStyle.Secondary).setEmoji('<:COSbroldTV:1527039618300514475>'),
     new ButtonBuilder().setCustomId('ticket_close').setLabel('fechar ticket').setStyle(ButtonStyle.Danger).setEmoji('<:0_bow:1527039332672733216> ')
   );
 
   const staffRow = new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
       .setCustomId('ticket_staff_panel')
-      .setPlaceholder('Menu Moderativo')
+      .setPlaceholder('painel da staff')
       .addOptions(
         { label: 'banir usuário', value: 'ban', description: 'bane o dono do ticket' },
         { label: 'adicionar usuário no ticket', value: 'add_user', description: 'libera o acesso de outro usuário' },
@@ -176,7 +176,7 @@ async function sendLogMessage(guild, content, files = []) {
   if (!channel?.isTextBased()) return;
 
   const payload = buildContainerPayload({
-    title: '<:0_bow:1527039332672733216> logs Atendimento Ticket',
+    title: '<:0_bow:1527039332672733216> logs atendimento ticket',
     body: content,
     accentColor: guildData.panel.accentColor
   });
@@ -220,13 +220,13 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
       }
 
       const payload = buildContainerPayload({
-        title: 'transcript HTML gerado.',
+        title: '<:COScoheedesu:1527041563455258796> informações de ticket:',
         body: [
-          `<:0_bow:1527039332672733216> **ticket:** <#${ticket.channelId}>`,
-          `<:0_bow:1527039332672733216> **usuário:** ${ownerName}`,
-          `<:0_bow:1527039332672733216> **quem fechou:** ${closedBy.username}`,
-          `<:0_bow:1527039332672733216> **quem assumiu:** ${staffName}`,
-          `<:0_bow:1527039332672733216> **mensagens totais:** ${transcript.messageCount}`
+          `**ticket:** <#${ticket.channelId}>`,
+          `**usuário:** ${ownerName}`,
+          `**quem fechou:** ${closedBy.username}`,
+          `**quem assumiu:** ${staffName}`,
+          `**mensagens totais:** ${transcript.messageCount}`
         ].join('\n'),
         accentColor: guildData.panel.accentColor
       });
@@ -313,7 +313,7 @@ async function createTicketChannel(client, guild, user, source) {
     name,
     type: ChannelType.GuildText,
     parent: guildData.ticket.categoryId || undefined,
-    topic: `clicar em 'fechar ficket' pra fechar o Ticket`,
+    topic: `clicar em 'fechar ficket' pra fechar o ticket`,
     permissionOverwrites: overwrites,
     reason: `ticket aberto por ${user.tag}`
   });
@@ -349,7 +349,7 @@ async function publishPanelToChannel(guild, channel, actor) {
 
 async function notifyUserInTicket(channel, ticket, guildData) {
   const payload = buildContainerPayload({
-    title: '<:0_bow:1527039332672733216>  notificação',
+    title: '<:Cosbrletters:1527054372020949055>  notificação',
     body: `**<@${ticket.ownerId}>, a equipe quer a sua resposta!**`,
     accentColor: guildData.panel.accentColor
   });
@@ -364,7 +364,7 @@ async function notifyUserInTicket(channel, ticket, guildData) {
 async function notifyStaffInTicket(channel, guildData) {
   const target = guildData.panel.pingRoleId ? `<@&${guildData.panel.pingRoleId}>` : '@here';
   const payload = buildContainerPayload({
-    title: '<:0_bow:1527039332672733216>  notificação',
+    title: '<:Cosbrletters:1527054372020949055>  notificação',
     body: `${target} equipe do servidor chamada. aguarde.`,
     accentColor: guildData.panel.accentColor
   });
