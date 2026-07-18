@@ -127,13 +127,13 @@ function buildTicketMessage(guildData, ticket) {
         `# <:Cosbrletters:1527054372020949055> ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `<:0_bow:1527039332672733216> **usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `<:COScoheedesu:1527041563455258796> **ping:** nenhum por enquanto `,
+        `<:COScoheedesu:1527041563455258796> **ping:** <@&1504998108407398501> <@&1505223596728127618> `,
         `-# ~~                                                                                  ~~`,
         `<:emoji_174:1527054420821540978> **aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
         `<a:016_choc:1527039252578172958>  **staff que assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
-        `**atenção**: usuários abaixo do cargo /ceo devem pedir **permissão** de quem assumiu para interferir no Ticket.`,
+        `**atenção**: usuários que não tem o cargo <@&1505223596728127618> devem pedir **permissão** de quem assumiu para interferir no ticket.`,
         `-# ~~                                                                                  ~~`,
         `**se a equipe demorar demais para te atender**, clique no botão '**notificar equipe**'.`
       ].join('\n')
