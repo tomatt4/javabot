@@ -127,13 +127,13 @@ function buildTicketMessage(guildData, ticket) {
         `# ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `**ping:** <@&1504998108407398501> <@&1505223596728127618> `,
+        `**ping:** <@&1500969290093039626> <@&1513653295061798922> `,
         `-# ~~                                                                                  ~~`,
         `**aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
         `**staff que assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
-        `**atenção**: usuários que não tem o cargo <@&1505223596728127618> devem pedir **permissão** de quem assumiu para interferir no ticket.`,
+        `**atenção**: usuários que não tem o cargo da **secretaria** devem pedir **permissão** de quem assumiu para interferir no ticket.`,
         `-# ~~                                                                                  ~~`,
         `**se a equipe demorar demais para te atender**, clique no botão '**notificar equipe**'.`
       ].join('\n')
