@@ -1,11 +1,12 @@
 const { 
-    SlashCommandBuilder, 
-    ActionRowBuilder, 
-    ButtonBuilder, 
+    SlashCommandBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
     ButtonStyle,
     TextDisplayBuilder,
     MediaGalleryBuilder,
     MediaGalleryItemBuilder,
+    ContainerBuilder,
     MessageFlags
 } = require('discord.js');
 
@@ -16,24 +17,30 @@ module.exports = {
 
     async execute(interaction) {
 
-        const components = [
+        const container = new ContainerBuilder()
+            .setAccentColor(0x5865F2);
 
-            // Imagem no topo
+        // Imagem no topo
+        container.addMediaGalleryComponents(
             new MediaGalleryBuilder()
                 .addItems(
                     new MediaGalleryItemBuilder()
-                        .setURL('https://i.postimg.cc/vHx6xSgZ/image0.png')
-                ),
+                        .setURL('https://exemplo.com/imagem.png')
+                )
+        );
 
-            // Texto abaixo da imagem
+        // Texto abaixo da imagem
+        container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(
                     '# 📩 Tellonym\n' +
                     'Envie mensagens anônimas ou públicas para outros usuários.\n\n' +
                     'Clique no botão abaixo para começar.'
-                ),
+                )
+        );
 
-            // Botão no final
+        // Botão
+        container.addActionRowComponents(
             new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
@@ -41,10 +48,10 @@ module.exports = {
                         .setLabel('Enviar Tellonym')
                         .setStyle(ButtonStyle.Primary)
                 )
-        ];
+        );
 
         return interaction.reply({
-            components,
+            components: [container],
             flags: MessageFlags.IsComponentsV2
         });
     }
