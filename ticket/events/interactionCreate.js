@@ -11,7 +11,7 @@ const {
   TextDisplayBuilder
 } = require('discord.js');
 
-const Canvas = require('canvas');
+const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const logger = require('../utils/logger');
 const {
   canManagePanel,
@@ -297,7 +297,7 @@ async function handleTellonymInteraction(interaction) {
       const destinatario = interaction.fields.getTextInputValue('input_destinatario');
       const mensagem = interaction.fields.getTextInputValue('input_mensagem');
 
-      const canvas = Canvas.createCanvas(700, 250);
+      const canvas = createCanvas(700, 250);
       const ctx = canvas.getContext('2d');
 
       ctx.fillStyle = '#ffffff';
@@ -315,7 +315,7 @@ async function handleTellonymInteraction(interaction) {
       } else {
           ctx.fillText(interaction.user.username, 100, 55);
           const avatarURL = interaction.user.displayAvatarURL({ extension: 'png', size: 128 });
-          const avatar = await Canvas.loadImage(avatarURL);
+          const avatar = await loadImage(avatarURL);
           ctx.save();
           ctx.beginPath();
           ctx.arc(50, 45, 30, 0, Math.PI * 2, true);
@@ -357,7 +357,7 @@ async function handleTellonymInteraction(interaction) {
       ctx.font = '16px Arial';
       ctx.fillText('há poucos segundos', 520, 230);
 
-      const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'tellonym-gerado.png' });
+      const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), { name: 'tellonym-gerado.png' });
 
       await interaction.channel.send({
           content: `**Para:** ${destinatario}`,
