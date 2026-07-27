@@ -1,11 +1,4 @@
-const { 
-    SlashCommandBuilder, 
-    ActionRowBuilder, 
-    ButtonBuilder, 
-    ButtonStyle, 
-    TextDisplayBuilder, 
-    MessageFlags 
-} = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,19 +6,20 @@ module.exports = {
         .setDescription('Abas para envio de Tellonym anônimo ou público.'),
         
     async execute(interaction) {
-        const componentesOpcoesV2 = [
-            new TextDisplayBuilder().setContent('# 📩 Tellonym\nClique no botão abaixo para abrir as opções e enviar a sua mensagem.'),
-            new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('btn_abrir_opcoes_tellonym')
-                    .setLabel('Enviar Tellonym')
-                    .setStyle(ButtonStyle.Primary)
-            )
-        ];
+        // Garante que só vai executar se for um comando de barra válido
+        if (!interaction.isChatInputCommand()) return;
 
-        return interaction.reply({ 
-            components: componentesOpcoesV2, 
-            flags: MessageFlags.IsComponentsV2,
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('btn_abrir_opcoes_tellonym')
+                .setLabel('Enviar Tellonym')
+                .setStyle(ButtonStyle.Primary)
+        );
+
+        return interaction.reply({
+            content: 'Clique no botão abaixo para abrir as opções e enviar o seu Tellonym:',
+            components: [row],
+            ephemeral: true
         });
     },
 };
