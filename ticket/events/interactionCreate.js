@@ -359,9 +359,31 @@ async function handleTellonymInteraction(interaction) {
 
       const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), { name: 'tellonym-gerado.png' });
 
+      let usuarioMarcado = null;
+
+      const match = destinatario.match(/<@!?(\d+)>/);
+
+      if (match) {
+          const userId = match[1];
+          const member = await interaction.guild.members.fetch(userId).catch(() => null);
+
+          if (member) {
+              usuarioMarcado = member.user;
+          }
+      }
+
+      const destinoTexto = usuarioMarcado
+          ? `**Para:** ${usuarioMarcado.username}`
+          : '**Para:** Ninguém especificado';
+
+
       await interaction.channel.send({
-          content: `**Para:** ${destinatario}`,
-          files: [attachment]
+          components: [
+              new TextDisplayBuilder()
+                  .setContent(destinoTexto)
+          ],
+          files: [attachment],
+          flags: MessageFlags.IsComponentsV2
       });
       
       return interaction.followUp({ content: '✅ Seu Tellonym foi enviado com sucesso!', ephemeral: true });
