@@ -355,7 +355,7 @@ async function handleTellonymInteraction(interaction) {
 
       ctx.fillStyle = '#808080';
       ctx.font = '16px Arial';
-      ctx.fillText('há poucos segundos', 520, 230);
+      ctx.fillText('Sistema Tellonym pelo Salvador', 520, 230);
 
       const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), { name: 'tellonym-gerado.png' });
 
@@ -377,7 +377,17 @@ async function handleTellonymInteraction(interaction) {
           : '**Para:** Ninguém especificado';
 
 
-      await interaction.channel.send({
+      const CANAL_TELLONYM = '1531117315339456512';
+
+      const canal = await interaction.guild.channels.fetch(CANAL_TELLONYM);
+
+      if (!canal) {
+          return interaction.editReply({
+              content: '❌ Canal de Tellonym não encontrado.'
+          });
+      }
+
+      await canal.send({
           components: [
               new TextDisplayBuilder()
                   .setContent(destinoTexto)
@@ -386,7 +396,7 @@ async function handleTellonymInteraction(interaction) {
           flags: MessageFlags.IsComponentsV2
       });
       
-      return interaction.followUp({ content: '✅ Seu Tellonym foi enviado com sucesso!', ephemeral: true });
+      return interaction.followUp({ content: '✅ Seu Tellonym foi enviado com sucesso.', ephemeral: true });
   }
 }
 // ==========================================
