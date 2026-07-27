@@ -391,7 +391,7 @@ async function handleCommand(client, interaction) {
   }
 
   try {
-    await command.execute(client, interaction);
+    await command.execute(interaction);
   } catch (error) {
     logger.error(`Erro no comando /${interaction.commandName}`, error);
 
