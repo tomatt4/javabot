@@ -9,6 +9,7 @@ const {
   ButtonStyle,
   AttachmentBuilder,
   TextDisplayBuilder
+  UserSelectMenuBuilder
 } = require('discord.js');
 
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
@@ -52,6 +53,7 @@ const {
   buildTeamTargetPanel
 } = require('../utils/managementPanel');
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
+const tellonymDestinatarios = new Map();
 
 function noticePayload(accentColor, title, body) {
   return buildContainerPayload({ title, body, accentColor });
@@ -238,42 +240,92 @@ function buildManagementModal(action, guildData) {
 // FUNÇÃO EXCLUSIVA PARA O TELLONYM
 // ==========================================
 async function handleTellonymInteraction(interaction) {
-    // 1. Quando clicar em "Enviar Tellonym" na mensagem principal
-    if (interaction.isButton() && interaction.customId === 'btn_abrir_opcoes_tellonym') {
+
+    // 1. Abrir opções do Tellonym
+    if (
+        interaction.isButton() &&
+        interaction.customId === 'btn_abrir_opcoes_tellonym'
+    ) {
+
         const componentesOpcoesV2 = [
-            new TextDisplayBuilder().setContent('# Deseja enviar em anônimo?\n\n» **Modo anônimo**\nNem mesmo o criador do bot saberá que você enviou este tellonym\n\n» **Modo público**\nTodos verão seu nome e avatar nesta publicação'),
+            new TextDisplayBuilder().setContent(
+                '# Deseja enviar em anônimo?\n\n' +
+                '» **Modo anônimo**\n' +
+                'Nem mesmo o criador do bot saberá que você enviou este tellonym\n\n' +
+                '» **Modo público**\n' +
+                'Todos verão seu nome e avatar nesta publicação'
+            ),
+
+            new ActionRowBuilder().addComponents(
+                new UserSelectMenuBuilder()
+                    .setCustomId('select_tellonym_destinatario')
+                    .setPlaceholder('Escolha para quem é (opcional)')
+                    .setMinValues(0)
+                    .setMaxValues(1)
+            ),
+
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('btn_tellonym_anonimo')
-                    .setLabel('Enviar em anônimo')
+                    .setLabel('Enviar em modo Anônimo')
                     .setStyle(ButtonStyle.Secondary),
+
                 new ButtonBuilder()
                     .setCustomId('btn_tellonym_publico')
-                    .setLabel('Enviar com meu nome')
+                    .setLabel('Enviar em modo Público')
                     .setStyle(ButtonStyle.Secondary)
             )
         ];
 
-        return interaction.reply({ 
-            components: componentesOpcoesV2, 
+        return interaction.reply({
+            components: componentesOpcoesV2,
             flags: MessageFlags.IsComponentsV2,
-            ephemeral: true 
+            ephemeral: true
         });
     }
 
-    // 2. Quando clicar em um dos botões (Anônimo ou Público) para abrir o Formulário
-    if (interaction.isButton() && (interaction.customId === 'btn_tellonym_anonimo' || interaction.customId === 'btn_tellonym_publico')) {
-        const isAnonimo = interaction.customId === 'btn_tellonym_anonimo';
-        
-        const modal = new ModalBuilder()
-            .setCustomId(isAnonimo ? 'modal_tellonym_anon' : 'modal_tellonym_pub')
-            .setTitle(isAnonimo ? 'Tellonym (Modo Anônimo)' : 'Tellonym (Modo Público)');
 
-        const inputDestinatario = new TextInputBuilder()
-            .setCustomId('input_destinatario')
-            .setLabel('Para quem é? (Opcional)')
-            .setStyle(TextInputStyle.Short)
-            .setRequired(false); // <--- AQUI: Deixado como opcional/não obrigatório
+    // 2. Guardar usuário escolhido no Select Menu
+    if (
+        interaction.isUserSelectMenu() &&
+        interaction.customId === 'select_tellonym_destinatario'
+    ) {
+
+        const usuarioEscolhido = interaction.values[0] ?? null;
+
+        tellonymDestinatarios.set(
+            interaction.user.id,
+            usuarioEscolhido
+        );
+
+        return interaction.deferUpdate();
+    }
+
+
+    // 3. Abrir Modal
+    if (
+        interaction.isButton() &&
+        (
+            interaction.customId === 'btn_tellonym_anonimo' ||
+            interaction.customId === 'btn_tellonym_publico'
+        )
+    ) {
+
+        const isAnonimo =
+            interaction.customId === 'btn_tellonym_anonimo';
+
+        const modal = new ModalBuilder()
+            .setCustomId(
+                isAnonimo
+                    ? 'modal_tellonym_anon'
+                    : 'modal_tellonym_pub'
+            )
+            .setTitle(
+                isAnonimo
+                    ? 'Tellonym (Modo Anônimo)'
+                    : 'Tellonym (Modo Público)'
+            );
+
 
         const inputMensagem = new TextInputBuilder()
             .setCustomId('input_mensagem')
@@ -281,123 +333,264 @@ async function handleTellonymInteraction(interaction) {
             .setStyle(TextInputStyle.Paragraph)
             .setRequired(true);
 
+
         modal.addComponents(
-            new ActionRowBuilder().addComponents(inputDestinatario),
-            new ActionRowBuilder().addComponents(inputMensagem)
+            new ActionRowBuilder()
+                .addComponents(inputMensagem)
         );
 
         return interaction.showModal(modal);
     }
 
-    // 3. Quando enviar o Formulário (Modal) e Desenhando a Imagem
-    if (interaction.isModalSubmit() && (interaction.customId === 'modal_tellonym_anon' || interaction.customId === 'modal_tellonym_pub')) {
-        await interaction.deferUpdate(); 
-        
-        const isAnonimo = interaction.customId === 'modal_tellonym_anon';
-        const destinatario = interaction.fields.getTextInputValue('input_destinatario').trim();
-        const mensagem = interaction.fields.getTextInputValue('input_mensagem');
+
+    // 4. Enviar Modal e gerar imagem
+    if (
+        interaction.isModalSubmit() &&
+        (
+            interaction.customId === 'modal_tellonym_anon' ||
+            interaction.customId === 'modal_tellonym_pub'
+        )
+    ) {
+
+        await interaction.deferReply({
+            ephemeral: true
+        });
+
+
+        const isAnonimo =
+            interaction.customId === 'modal_tellonym_anon';
+
+
+        const destinatario =
+            tellonymDestinatarios.get(interaction.user.id);
+
+
+        const mensagem =
+            interaction.fields.getTextInputValue('input_mensagem');
+
 
         const canvas = createCanvas(700, 250);
         const ctx = canvas.getContext('2d');
 
+
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
 
         ctx.fillStyle = '#000000';
         ctx.font = 'bold 22px Arial';
 
+
         if (isAnonimo) {
+
             ctx.fillText('Anônimo', 100, 55);
+
             ctx.beginPath();
-            ctx.arc(50, 45, 30, 0, Math.PI * 2, true);
+            ctx.arc(
+                50,
+                45,
+                30,
+                0,
+                Math.PI * 2
+            );
+
             ctx.fillStyle = '#d3d3d3';
             ctx.fill();
+
         } else {
-            ctx.fillText(interaction.user.username, 100, 55);
-            const avatarURL = interaction.user.displayAvatarURL({ extension: 'png', size: 128 });
-            const avatar = await loadImage(avatarURL);
+
+            ctx.fillText(
+                interaction.user.username,
+                100,
+                55
+            );
+
+
+            const avatarURL =
+                interaction.user.displayAvatarURL({
+                    extension: 'png',
+                    size: 128
+                });
+
+
+            const avatar =
+                await loadImage(avatarURL);
+
+
             ctx.save();
+
             ctx.beginPath();
-            ctx.arc(50, 45, 30, 0, Math.PI * 2, true);
+
+            ctx.arc(
+                50,
+                45,
+                30,
+                0,
+                Math.PI * 2
+            );
+
             ctx.closePath();
+
             ctx.clip();
-            ctx.drawImage(avatar, 20, 15, 60, 60);
+
+            ctx.drawImage(
+                avatar,
+                20,
+                15,
+                60,
+                60
+            );
+
             ctx.restore();
         }
 
+
         ctx.fillStyle = '#333333';
         ctx.font = '24px Arial';
-        
-        function quebrarTexto(context, text, x, y, maxWidth, lineHeight) {
+
+
+        function quebrarTexto(
+            context,
+            text,
+            x,
+            y,
+            maxWidth,
+            lineHeight
+        ) {
+
             const words = text.split(' ');
             let line = '';
-            for(let n = 0; n < words.length; n++) {
-                const testLine = line + words[n] + ' ';
-                const metrics = context.measureText(testLine);
-                if (metrics.width > maxWidth && n > 0) {
-                    context.fillText(line, x, y);
-                    line = words[n] + ' ';
+
+            for (
+                let n = 0;
+                n < words.length;
+                n++
+            ) {
+
+                const testLine =
+                    line + words[n] + ' ';
+
+
+                const metrics =
+                    context.measureText(testLine);
+
+
+                if (
+                    metrics.width > maxWidth &&
+                    n > 0
+                ) {
+
+                    context.fillText(
+                        line,
+                        x,
+                        y
+                    );
+
+                    line =
+                        words[n] + ' ';
+
                     y += lineHeight;
+
                 } else {
+
                     line = testLine;
                 }
             }
-            context.fillText(line, x, y);
+
+            context.fillText(
+                line,
+                x,
+                y
+            );
         }
-        quebrarTexto(ctx, mensagem, 30, 110, 640, 30);
+
+
+        quebrarTexto(
+            ctx,
+            mensagem,
+            30,
+            110,
+            640,
+            30
+        );
+
 
         ctx.strokeStyle = '#e0e0e0';
         ctx.lineWidth = 2;
+
         ctx.beginPath();
         ctx.moveTo(30, 200);
         ctx.lineTo(670, 200);
         ctx.stroke();
 
+
         ctx.fillStyle = '#808080';
         ctx.font = '16px Arial';
-        ctx.fillText('Sistema Tellonym by Salva', 520, 230);
 
-        const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), { name: 'tellonym-gerado.png' });
+        ctx.fillText(
+            'Sistema Tellonym by Salva',
+            520,
+            230
+        );
 
-        const CANAL_TELLONYM = '1531117315339456512';
-        const canal = await interaction.guild.channels.fetch(CANAL_TELLONYM);
+
+        const attachment =
+            new AttachmentBuilder(
+                canvas.toBuffer('image/png'),
+                {
+                    name: 'tellonym-gerado.png'
+                }
+            );
+
+
+        const CANAL_TELLONYM =
+            '1531117315339456512';
+
+
+        const canal =
+            await interaction.guild.channels.fetch(
+                CANAL_TELLONYM
+            );
+
 
         if (!canal) {
-            return interaction.editReply({
-                content: '❌ Canal de Tellonym não encontrado.'
-            });
+            return interaction.editReply(
+                '❌ Canal de Tellonym não encontrado.'
+            );
         }
 
-        // Monta o objeto de envio dinamicamente
+
         const payload = {
             files: [attachment]
         };
 
-        // Se o usuário digitou algo no destinatário, tenta processar a menção ou texto
-        if (destinatario.length > 0) {
-            let usuarioMarcado = null;
-            const match = destinatario.match(/<@!?(\d+)>/);
 
-            if (match) {
-                const userId = match[1];
-                const member = await interaction.guild.members.fetch(userId).catch(() => null);
-                if (member) {
-                    usuarioMarcado = member.user;
-                }
-            }
+        if (destinatario) {
 
-            payload.content = usuarioMarcado
-                ? `**Para:** ${usuarioMarcado.username}`
-                : `**Para:** ${destinatario}`;
+            payload.content =
+                `**Para:** <@${destinatario}>`;
+
         }
 
-        // Envia para o canal (com texto se preenchido, ou apenas a imagem se vazio)
+
         await canal.send(payload);
-        
-        return interaction.followUp({ content: '✅ Seu Tellonym foi enviado com sucesso.', ephemeral: true });
+
+
+        tellonymDestinatarios.delete(
+            interaction.user.id
+        );
+
+
+        return interaction.editReply(
+            '✅ Seu Tellonym foi enviado com sucesso.'
+        );
     }
 }
-// ==========================================
 
 async function ensureManagementPermission(interaction, guildData) {
   if (await canManagePanel(interaction, guildData)) return true;
