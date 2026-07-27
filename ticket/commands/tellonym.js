@@ -18,14 +18,14 @@ module.exports = {
     async execute(interaction) {
 
         const container = new ContainerBuilder()
-            .setAccentColor(0x5865F2);
+            .setAccentColor(0x393A41);
 
         // Imagem no topo
         container.addMediaGalleryComponents(
             new MediaGalleryBuilder()
                 .addItems(
                     new MediaGalleryItemBuilder()
-                        .setURL('https://exemplo.com/imagem.png')
+                        .setURL('https://i.postimg.cc/vHx6xSgZ/image0.png')
                 )
         );
 
