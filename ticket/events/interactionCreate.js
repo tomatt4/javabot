@@ -8,7 +8,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
   AttachmentBuilder,
-  TextDisplayBuilder
+  TextDisplayBuilder,
   UserSelectMenuBuilder
 } = require('discord.js');
 
