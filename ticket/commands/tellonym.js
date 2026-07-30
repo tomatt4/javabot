@@ -18,9 +18,20 @@ module.exports = {
     async execute(interaction) {
 
         const container = new ContainerBuilder()
-            .setAccentColor(0x393A41);
+            .setAccentColor(0x00000);
 
-        // Imagem no topo
+        // Texto
+        container.addTextDisplayComponents(
+            new TextDisplayBuilder()
+                .setContent(
+                    '# 📩 Tellonym CDV\n' +
+                    'Bem vindo ao sistema de **Tellonym** da CDV! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
+                    'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
+                
+                .setFooter('Sistema Tellonym feito por Salva') 
+        );
+                
+        // Imagem no meio
         container.addMediaGalleryComponents(
             new MediaGalleryBuilder()
                 .addItems(
@@ -29,24 +40,15 @@ module.exports = {
                 )
         );
 
-        // Texto abaixo da imagem
-        container.addTextDisplayComponents(
-            new TextDisplayBuilder()
-                .setContent(
-                    '# 📩 Tellonym\n' +
-                    'Envie mensagens anônimas ou públicas para outros usuários.\n\n' +
-                    'Clique no botão abaixo para começar.'
-                )
-        );
-
-        // Botão
+        // Botão abaixo da imagem
         container.addActionRowComponents(
             new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setCustomId('btn_abrir_opcoes_tellonym')
-                        .setLabel('Enviar Tellonym')
-                        .setStyle(ButtonStyle.Primary)
+                        .setLabel('Enviar um Tellonym')
+                        .setStyle(ButtonStyle.Secondary)
+                        .setEmoji('<:mensagem:1532384745571487765>')
                 )
         );
 
