@@ -257,14 +257,6 @@ async function handleTellonymInteraction(interaction) {
             ),
 
             new ActionRowBuilder().addComponents(
-                new UserSelectMenuBuilder()
-                    .setCustomId('select_tellonym_destinatario')
-                    .setPlaceholder('Escolha para quem é (opcional)')
-                    .setMinValues(0)
-                    .setMaxValues(1)
-            ),
-
-            new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('btn_tellonym_anonimo')
                     .setLabel('Enviar em modo Anônimo')
@@ -284,25 +276,7 @@ async function handleTellonymInteraction(interaction) {
         });
     }
 
-
-    // 2. Guardar usuário escolhido no Select Menu
-    if (
-        interaction.isUserSelectMenu() &&
-        interaction.customId === 'select_tellonym_destinatario'
-    ) {
-
-        const usuarioEscolhido = interaction.values[0] ?? null;
-
-        tellonymDestinatarios.set(
-            interaction.user.id,
-            usuarioEscolhido
-        );
-
-        return interaction.deferUpdate();
-    }
-
-
-    // 3. Abrir Modal
+    // 2. Abrir Modal
     if (
         interaction.isButton() &&
         (
@@ -329,8 +303,10 @@ async function handleTellonymInteraction(interaction) {
 
         const inputMensagem = new TextInputBuilder()
             .setCustomId('input_mensagem')
-            .setLabel('Qual é a sua mensagem?')
+            .setLabel('Qual é a sua mensagem? Limite de caracteres: 85.')
             .setStyle(TextInputStyle.Paragraph)
+            .setMinLength(1)
+            .setMaxLength(85)
             .setRequired(true);
 
 
@@ -343,7 +319,7 @@ async function handleTellonymInteraction(interaction) {
     }
 
 
-    // 4. Enviar Modal e gerar imagem
+    // 3. Enviar Modal e gerar imagem
     if (
         interaction.isModalSubmit() &&
         (
@@ -587,7 +563,7 @@ async function handleTellonymInteraction(interaction) {
 
 
         return interaction.editReply(
-            '✅ Seu Tellonym foi enviado com sucesso.'
+            '✅ Seu Tellonym foi enviado com sucesso!'
         );
     }
 }
