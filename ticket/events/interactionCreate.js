@@ -249,11 +249,11 @@ async function handleTellonymInteraction(interaction) {
 
         const componentesOpcoesV2 = [
             new TextDisplayBuilder().setContent(
-                '# Deseja enviar em anônimo?\n\n' +
+                '# Deseja enviar em qual modo?\n\n' +
                 '» **Modo anônimo**\n' +
-                'Nem mesmo o criador do bot saberá que você enviou este tellonym\n\n' +
+                'Nem mesmo o criador do bot saberá que você enviou este tellonym.\n\n' +
                 '» **Modo público**\n' +
-                'Todos verão seu nome e avatar nesta publicação'
+                'Todos verão seu nome e avatar nesta publicação.'
             ),
 
             new ActionRowBuilder().addComponents(
@@ -533,7 +533,7 @@ async function handleTellonymInteraction(interaction) {
         ctx.font = '16px Arial';
 
         ctx.fillText(
-            'Sistema Tellonym by Salva',
+            'Sistema Tellonym',
             520,
             230
         );
