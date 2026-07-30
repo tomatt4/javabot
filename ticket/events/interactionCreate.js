@@ -303,7 +303,7 @@ async function handleTellonymInteraction(interaction) {
 
         const inputMensagem = new TextInputBuilder()
             .setCustomId('input_mensagem')
-            .setLabel('Qual é a sua mensagem? Limite de caracteres: 85.')
+            .setLabel('Qual é a sua mensagem? Limite: 85 letras.')
             .setStyle(TextInputStyle.Paragraph)
             .setMinLength(1)
             .setMaxLength(85)
