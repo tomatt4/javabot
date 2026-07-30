@@ -18,7 +18,7 @@ module.exports = {
     async execute(interaction) {
 
         const container = new ContainerBuilder()
-            .setAccentColor(0x00000);
+            .setAccentColor(0x000000);
 
         // Texto
         container.addTextDisplayComponents(
@@ -27,8 +27,8 @@ module.exports = {
                     '# 📩 Tellonym CDV\n' +
                     'Bem vindo ao sistema de **Tellonym** da CDV! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
                     'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
-                
-                .setFooter('Sistema Tellonym feito por Salva') 
+                )
+                .setFooter('Sistema Tellonym feito por Salva')
         );
                 
         // Imagem no meio
