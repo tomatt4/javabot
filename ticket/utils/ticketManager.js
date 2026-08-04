@@ -163,7 +163,7 @@ function buildTicketMessage(guildData, ticket) {
 
   container.addActionRowComponents(buttonsRow, staffRow);
 
-  return { components: [container] };
+  return asV2Message({ components: [container] });
 }
 
 async function sendLogMessage(guild, content, files = []) {
