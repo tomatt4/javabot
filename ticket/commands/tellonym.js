@@ -29,15 +29,6 @@ module.exports = {
                     'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
                 )
         );
-                
-        // Imagem no meio
-        container.addMediaGalleryComponents(
-            new MediaGalleryBuilder()
-                .addItems(
-                    new MediaGalleryItemBuilder()
-                        .setURL('https://i.postimg.cc/L6vffCPV/Chat-GPT-Image-6-de-ago-de-2026-21-49-55.png')
-                )
-        );
 
         // Botão abaixo da imagem
         container.addActionRowComponents(
