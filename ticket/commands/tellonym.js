@@ -24,8 +24,8 @@ module.exports = {
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(
-                    '# 📩 Tellonym CDV\n' +
-                    'Bem vindo ao sistema de **Tellonym** da CDV! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
+                    '# 📩 Tellonym Celestia\n' +
+                    'Bem vindo ao sistema de **Tellonym** da Celestia! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
                     'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
                 )
         );
@@ -35,7 +35,7 @@ module.exports = {
             new MediaGalleryBuilder()
                 .addItems(
                     new MediaGalleryItemBuilder()
-                        .setURL('https://i.postimg.cc/vHx6xSgZ/image0.png')
+                        .setURL('https://i.postimg.cc/L6vffCPV/Chat-GPT-Image-6-de-ago-de-2026-21-49-55.png')
                 )
         );
 
@@ -47,7 +47,6 @@ module.exports = {
                         .setCustomId('btn_abrir_opcoes_tellonym')
                         .setLabel('Enviar um Tellonym')
                         .setStyle(ButtonStyle.Secondary)
-                        .setEmoji('<:mensagem:1532384745571487765>')
                 )
         );
 
