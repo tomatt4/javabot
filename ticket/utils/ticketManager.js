@@ -135,7 +135,7 @@ function buildTicketMessage(guildData, ticket) {
         `-# ~~                                                                                  ~~`,
         `**Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**`,
         `-# ~~                                                                                  ~~`,
-        `**NÃO clique toda hora no botão 'Notificar Equipe'. Seja paciente.`
+        `**NÃO clique toda hora no botão 'Notificar Equipe'. Seja paciente**.`
       ].join('\n')
     )
   );
