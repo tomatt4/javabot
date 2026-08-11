@@ -143,16 +143,16 @@ function buildTicketMessage(guildData, ticket) {
   container.addSeparatorComponents(new SeparatorBuilder());
 
   const buttonsRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('ticket_claim').setLabel('assumir ticket').setStyle(ButtonStyle.Success),
-    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('notificar usuário').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('notificar equipe').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('ticket_close').setLabel('fechar ticket').setStyle(ButtonStyle.Danger)
+    new ButtonBuilder().setCustomId('ticket_claim').setLabel('Assumir ticket').setStyle(ButtonStyle.Success),
+    new ButtonBuilder().setCustomId('ticket_notify_user').setLabel('Notificar usuário').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('ticket_notify_staff').setLabel('Notificar equipe').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('ticket_close').setLabel('Fechar ticket').setStyle(ButtonStyle.Danger)
   );
 
   const staffRow = new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
       .setCustomId('ticket_staff_panel')
-      .setPlaceholder('painel da staff')
+      .setPlaceholder('Painel da Staff')
       .addOptions(
         { label: 'Banir usuário', value: 'ban', description: 'bane o dono do ticket' },
         { label: 'Adicionar usuário no ticket', value: 'add_user', description: 'libera o acesso de outro usuário' },
