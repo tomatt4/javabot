@@ -14,7 +14,7 @@ module.exports = {
             await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: false });
 
             const payload = buildContainerPayload({
-                title: "<:white_lock:1526828138955280524> Canal Trancado",
+                title: "Canal Trancado",
                 body: [
                     "**Este canal foi trancado.**",
                     `Trancado por: ${interaction.user}`
@@ -28,9 +28,9 @@ module.exports = {
             console.error(error);
             // Evita quebrar caso ocorra algum erro antes de responder
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: `<:negativobranco:1525565869407736029> Algo deu errado ao tentar trancar este canal.`, ephemeral: true }).catch(() => {});
+                await interaction.followUp({ content: `Algo deu errado ao tentar trancar este canal.`, ephemeral: true }).catch(() => {});
             } else {
-                await interaction.reply({ content: `<:negativobranco:1525565869407736029> Algo deu errado ao tentar trancar este canal.`, ephemeral: true }).catch(() => {});
+                await interaction.reply({ content: `Algo deu errado ao tentar trancar este canal.`, ephemeral: true }).catch(() => {});
             }
         }
     }    
