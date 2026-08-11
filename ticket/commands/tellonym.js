@@ -35,7 +35,7 @@ module.exports = {
             new MediaGalleryBuilder()
                 .addItems(
                     new MediaGalleryItemBuilder()
-                        .setURL('https://i.postimg.cc/brRR6GRg/Screenshot-20260806-214432-Discord-upscaled.png')
+                        .setURL('https://i.postimg.cc/L6vffCPV/Chat-GPT-Image-6-de-ago-de-2026-21-49-55.png')
                 )
         );
 
