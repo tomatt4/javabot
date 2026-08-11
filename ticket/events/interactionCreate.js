@@ -251,9 +251,9 @@ async function handleTellonymInteraction(interaction) {
             new TextDisplayBuilder().setContent(
                 '# Deseja enviar em qual modo?\n\n' +
                 '» **Modo anônimo**\n' +
-                'Nem mesmo o criador do bot saberá que você enviou este tellonym.\n\n' +
+                'Ninguém saberá quem mandou seu Tellonym.\n\n' +
                 '» **Modo público**\n' +
-                'Todos verão seu nome e avatar nesta publicação.'
+                'Seu nome estará exposto no Tellonym.'
             ),
 
             new ActionRowBuilder().addComponents(
@@ -303,10 +303,10 @@ async function handleTellonymInteraction(interaction) {
 
         const inputMensagem = new TextInputBuilder()
             .setCustomId('input_mensagem')
-            .setLabel('Qual é a sua mensagem? Limite: 85 letras.')
+            .setLabel('Qual é a sua mensagem? Limite: 100 letras.')
             .setStyle(TextInputStyle.Paragraph)
             .setMinLength(1)
-            .setMaxLength(85)
+            .setMaxLength(100)
             .setRequired(true);
 
 
@@ -563,7 +563,7 @@ async function handleTellonymInteraction(interaction) {
 
 
         return interaction.editReply(
-            '✅ Seu Tellonym foi enviado com sucesso!'
+            '✅ Seu Tellonym foi enviado com sucesso.'
         );
     }
 }
