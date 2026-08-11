@@ -396,7 +396,7 @@ async function closeTicketAndArchive(client, guild, channel, ticket, closedBy) {
 
   setTimeout(async () => {
     await channel.delete(`ticket encerrado por ${closedBy.username}`).catch((error) => {
-      logger.error(falha ao excluir o canal do ticket:', error);
+      logger.error('falha ao excluir o canal do ticket:', error);
     });
   }, config.defaults.closeDeleteDelayMs || 5000);
 }
