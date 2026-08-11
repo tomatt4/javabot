@@ -6,7 +6,7 @@ module.exports = {
   bot: {
     status: 'idle',
     activityType: 'Watching',
-    activityName: 'feito por Salvador'
+    activityName: 'bot feito pelo salva'
   },
 
   defaults: {
