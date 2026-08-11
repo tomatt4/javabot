@@ -525,7 +525,7 @@ async function handleTellonymInteraction(interaction) {
 
 
         const CANAL_TELLONYM =
-            '1531117315339456512';
+            '1536843185719083018';
 
 
         const canal =
