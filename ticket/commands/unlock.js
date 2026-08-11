@@ -14,7 +14,7 @@ module.exports = {
             await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: true });
 
             const payload = buildContainerPayload({
-                title: "<:white_unlock:1526828145972350976> Canal Destrancado",
+                title: "Canal Destrancado",
                 body: [
                     "**Esse canal foi destrancado.**",
                     `Destrancado por: ${interaction.user}`
@@ -27,9 +27,9 @@ module.exports = {
         } catch (error) {
             console.error(error);
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: `<:negativobranco:1525565869407736029> algo deu errado ao tentar destrancar este chat.`, ephemeral: true }).catch(() => {});
+                await interaction.followUp({ content: `Algo deu errado ao tentar destrancar este chat.`, ephemeral: true }).catch(() => {});
             } else {
-                await interaction.reply({ content: `<:negativobranco:1525565869407736029> Algo deu errado ao tentar destrancar este chat.`, ephemeral: true }).catch(() => {});
+                await interaction.reply({ content: `Algo deu errado ao tentar destrancar este chat.`, ephemeral: true }).catch(() => {});
             }
         }
     }        
