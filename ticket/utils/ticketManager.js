@@ -123,11 +123,11 @@ function buildTicketMessage(guildData, ticket) {
 
   container.addTextDisplayComponents(
     new TextDisplayBuilder().setContent(
-      [
+      [ 
         `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
         `-# ~~                                                                                  ~~`,
-        `**Ping:** <@&1534288397332647936> `,
+        `**Ping:** ${target} `,
         `-# ~~                                                                                  ~~`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
@@ -239,12 +239,7 @@ async function sendTranscript(guild, transcript, ticket, closedBy) {
       });
     }
   }
-
-  await sendLogMessage(
-    guild,
-    `<#${ticket.channelId}> fechado por ${closedBy.username}.`,
-    [transcript.attachment]
-  );
+  
 }
 
 async function createTicketChannel(client, guild, user, source) {
