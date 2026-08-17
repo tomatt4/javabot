@@ -852,7 +852,8 @@ async function handleTicketButton(client, interaction) {
         return replyNotice(interaction, 'Sem permissão', 'Você não tem permissão para fechar tickets.', guildData.panel.accentColor);
       }
 
-      await replyNotice(interaction, 'Fechando ticket', 'Fechando ticket...', guildData.panel.accentColor);
+      await replyNotice(interaction, 'Fechando ticket', 'O ticket será fechado em 5 segundos.', guildData.panel.accentColor, { ephemeral: false });
+      
       await closeTicketAndArchive(client, interaction.guild, interaction.channel, ticket, interaction.user);
       return;
     }
