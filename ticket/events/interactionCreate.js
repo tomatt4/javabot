@@ -820,7 +820,7 @@ async function handleTicketButton(client, interaction) {
 
       await interaction.update(payload);
       await interaction.followUp(asV2Message(noticePayload(guildData.panel.accentColor, 'Ticket assumido', alreadyClaimed ? `Ticket transferido para <@${interaction.user.id}>.` : `Ticket assumido por <@${interaction.user.id}>.`), {
-        ephemeral: true,
+        ephemeral: false,
         allowedMentions: { users: [interaction.user.id] }
       }));
       return;
