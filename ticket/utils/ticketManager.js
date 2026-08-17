@@ -124,18 +124,16 @@ function buildTicketMessage(guildData, ticket) {
   container.addTextDisplayComponents(
     new TextDisplayBuilder().setContent(
       [ 
-        `# Ticket #${String(ticket.ticketNumber).padStart(4, '0')}`,
+        `# Ticket #${String(ticket.ticketNumber).padStart(3, '0')}`,
         `**Usuário:** <@${ticket.ownerId}>`,
-        `-# ~~                                                                                  ~~`,
-        `**Ping:** ${target} `,
         `-# ~~                                                                                  ~~`,
         `**Aberto em:** <t:${Math.floor(new Date(ticket.createdAt).getTime() / 1000)}:f>`,
         `-# ~~                                                                                  ~~`,
         `**Staff que assumiu:** ${ticket.claimedBy ? `<@${ticket.claimedBy}>` : 'ninguém por enquanto.'}`,
         `-# ~~                                                                                  ~~`,
-        `**Se a equipe demorar demais para te atender**, clique no botão '**Notificar Equipe**`,
+        `Se a equipe demorar demais para te atender, clique no botão 'Notificar Equipe'`,
         `-# ~~                                                                                  ~~`,
-        `**NÃO clique toda hora no botão 'Notificar Equipe'. Seja paciente**.`
+        `Não clique toda hora no botão 'Notificar Equipe'. Seja paciente.`
       ].join('\n')
     )
   );
