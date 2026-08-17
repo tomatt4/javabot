@@ -6,7 +6,7 @@ module.exports = {
   bot: {
     status: 'online',
     activityType: 'Watching',
-    activityName: 'bot feito pelo salva'
+    activityName: '.gg/cruel'
   },
 
   defaults: {
