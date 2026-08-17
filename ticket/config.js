@@ -4,7 +4,7 @@ module.exports = {
   guildId: process.env.GUILD_ID,
 
   bot: {
-    status: 'idle',
+    status: 'online',
     activityType: 'Watching',
     activityName: 'bot feito pelo salva'
   },
