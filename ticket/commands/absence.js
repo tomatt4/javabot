@@ -180,10 +180,15 @@ async function checkAndSendAbsencePanel(client) {
   const messages = await channel.messages.fetch({ limit: 10 });
   
   // Verifica se alguma mensagem enviada pelo bot contém o botão 'staff_absence_btn'
-  const hasPanel = messages.some(msg => 
-    msg.author.id === client.user.id && 
-    msg.components.some(row => row.components.some(c => c.customId === 'staff_absence_btn'))
-  );
+  const hasPanel = messages.some(msg => {
+    if (msg.author.id !== client.user.id) return false;
+
+    return msg.components?.some(row =>
+      row.components?.some(component =>
+        component.customId === 'staff_absence_btn'
+      )
+    ) ?? false;
+  });
 
   if (!hasPanel) {
     await sendAbsencePanel(channel);
