@@ -570,6 +570,19 @@ async function setLastPanelMessage(guildId, data) {
   return guildData.ticket.lastPanelMessage;
 }
 
+async function ensureAbsenseTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS staff_absences (
+      id SERIAL PRIMARY KEY,
+      guild_id TEXT NOT NULL
+      user_id TEXT NOT NULL
+      reason TEXT NOT NULL
+      expires_at TIMESTAMPZ NOT NULL
+      created_at TIMESTAMPZ NOT NULL DEFAULT NOW()
+    )
+  `) 
+}
+
 module.exports = {
   ROOT,
   DATA_DIR,

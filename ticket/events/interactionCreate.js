@@ -54,6 +54,23 @@ const {
 } = require('../utils/managementPanel');
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
 const tellonymDestinatarios = new Map();
+const { handleAbsenceInteraction } = require('../handlers/absence'); // Ajuste o caminho
+
+module.exports = {
+  name: 'interactionCreate',
+  execute: async (interaction, client) => {
+    // Verifica se é o botão ou modal do nosso sistema de ausência
+    if (interaction.customId === 'staff_absence_btn' || interaction.customId === 'staff_absence_modal') {
+      return await handleAbsenceInteraction(interaction, client);
+    }
+
+    // Se não for, continua processando seus comandos normais
+    if (interaction.isChatInputCommand()) {
+       const command = client.commands.get(interaction.commandName);
+       if (command) await command.run(client, interaction);
+    }
+  }
+};
 
 function noticePayload(accentColor, title, body) {
   return buildContainerPayload({ title, body, accentColor });
