@@ -170,6 +170,34 @@ async function handleAbsenceInteraction(interaction, client) {
   }
 }
 
+async function checkAndSendAbsencePanel(client) {
+  const channelId = '1524121370122780932';
+  const channel = await client.channels.fetch(channelId).catch(() => null);
+
+  if (!channel) return console.log('❌ Canal de ausência não encontrado.');
+
+  // Busca as últimas 10 mensagens do canal para ver se o painel já existe
+  const messages = await channel.messages.fetch({ limit: 10 });
+  
+  // Verifica se alguma mensagem enviada pelo bot contém o botão 'staff_absence_btn'
+  const hasPanel = messages.some(msg => 
+    msg.author.id === client.user.id && 
+    msg.components.some(row => row.components.some(c => c.customId === 'staff_absence_btn'))
+  );
+
+  if (!hasPanel) {
+    await sendAbsencePanel(channel);
+    console.log('✅ Painel de ausência enviado com sucesso!');
+  } else {
+    console.log('ℹ️ O painel de ausência já existe no canal.');
+  }
+}
+
+module.exports = {
+  // ... seus exports anteriores
+  checkAndSendAbsencePanel 
+};
+
 module.exports = {
   sendAbsencePanel,
   handleAbsenceInteraction,
