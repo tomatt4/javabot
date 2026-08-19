@@ -194,11 +194,6 @@ async function checkAndSendAbsencePanel(client) {
 }
 
 module.exports = {
-  // ... seus exports anteriores
-  checkAndSendAbsencePanel 
-};
-
-module.exports = {
   sendAbsencePanel,
   handleAbsenceInteraction,
   parseDuration
