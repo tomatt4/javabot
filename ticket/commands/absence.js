@@ -115,7 +115,7 @@ async function handleAbsenceInteraction(interaction, client) {
     );
 
     // Canal onde será postado o aviso
-    const logChannelId = 'SEU_ID_DE_CANAL_DE_AUSENCIA'; // Substitua pelo ID do seu canal
+    const logChannelId = '1539753657300418651'; // Substitua pelo ID do seu canal
     const logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     const timestampRelative = `<t:${Math.floor(expiresAt.getTime() / 1000)}:R>`;
