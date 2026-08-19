@@ -62,7 +62,7 @@ async function sendAbsencePanel(channel) {
 }
 
 // 2. Interceptador de Interações (Botões e Modals)
-async function handleAbsenceInteraction(interaction, client) {
+async function handleAbsenceInteraction(client, interction) {
   // Quando clica no botão "Ausentar-se"
   if (interaction.isButton() && interaction.customId === 'staff_absence_btn') {
     const modal = new ModalBuilder()
