@@ -15,7 +15,7 @@ module.exports = {
         .setName('tellonym')
         .setDescription('Abas para envio de Tellonym anônimo ou público.'),
 
-    async execute(interaction) {
+    async execute(client, interaction) {
 
         const container = new ContainerBuilder()
             .setAccentColor(0x000000);

@@ -56,49 +56,6 @@ const { buildContainerPayload, asV2Message } = require('../utils/ui');
 const tellonymDestinatarios = new Map();
 const { handleAbsenceInteraction } = require('../commands/absence');
 
-module.exports = {
-  name: 'interactionCreate',
-
-  execute: async (client, interaction) => {
-    try {
-      // Sistema de ausência
-      if (
-        interaction.isButton() &&
-        interaction.customId === 'staff_absence_btn'
-      ) {
-        return await handleAbsenceInteraction(interaction, client);
-      }
-
-      if (
-        interaction.isModalSubmit() &&
-        interaction.customId === 'staff_absence_modal'
-      ) {
-        return await handleAbsenceInteraction(interaction, client);
-      }
-
-      // Comandos Slash
-      if (interaction.isChatInputCommand()) {
-        const command = client.commands.get(interaction.commandName);
-
-        if (command) {
-          return await command.run(client, interaction);
-        }
-      }
-
-    } catch (error) {
-      console.error('❌ Erro no interactionCreate:', error);
-
-      // Só tenta responder se ainda não tiver respondido
-      if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({
-          content: '❌ Ocorreu um erro ao processar essa interação.',
-          ephemeral: true
-        }).catch(console.error);
-      }
-    }
-  }
-};
-
 function noticePayload(accentColor, title, body) {
   return buildContainerPayload({ title, body, accentColor });
 }
@@ -634,7 +591,7 @@ async function handleCommand(client, interaction) {
   }
 
   try {
-    await command.execute(interaction);
+    await command.execute(client, interaction);
   } catch (error) {
     logger.error(`Erro no comando /${interaction.commandName}`, error);
 
@@ -1161,6 +1118,13 @@ module.exports = {
     try {
       if (interaction.isChatInputCommand()) return handleCommand(client, interaction);
 
+      if (
+        (interaction.isButton() && interaction.customId === 'staff_absence_btn') ||
+        (interaction.isModalSubmit() && interaction.customId === 'staff_absence_modal')
+      ) {
+        return await handleAbsenceInteraction(interaction);
+      }
+
       if (interaction.isModalSubmit()) {
         if (interaction.customId.startsWith('staff_modal:')) return handleStaffModal(interaction);
         if (interaction.customId.startsWith('manage_modal:')) return handleManagementModal(client, interaction);
@@ -1194,6 +1158,15 @@ module.exports = {
 
       if (interaction.isChannelSelectMenu() && interaction.customId.startsWith('manage_channel:')) {
         return handleManagementChannelSelect(client, interaction);
+      }
+
+      if (!interaction.replied && !interaction.deferred) {
+        return replyNotice(
+          interaction,
+          'Interação indisponível',
+          'Essa ação não está disponível no momento.',
+          client.config.defaults.accentColor
+        );
       }
     } catch (error) {
       logger.error('Erro em interactionCreate.', error);

@@ -8,8 +8,7 @@ module.exports = {
         .setDescription("Tranque um canal")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
 
-    // Adicionado "client" como primeiro parâmetro para alinhar com seu handler!
-    async execute(interaction, client) {
+    async execute(client, interaction) {
         try {
             await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: false });
 
