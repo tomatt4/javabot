@@ -18,8 +18,11 @@ async function loadEvents(client) {
     if (event.once) {
       client.once(event.name, (...args) => event.execute(client, ...args));
     } else {
-      client.on(event.name, (...args) => event.execute(client, ...args));
-    }
+      client.on(event.name, (...args) => {
+        console.log(`🔥 EVENTO DISPARADO: ${event.name}`);
+        event.execute(client, ...args);
+  });
+}
   }
 
   logger.info(`${files.length} evento(s) carregado(s).`);
