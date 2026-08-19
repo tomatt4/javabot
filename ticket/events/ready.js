@@ -1,6 +1,6 @@
 const { Events } = require('discord.js');
 const logger = require('../utils/logger');
-const { checkAndSendAbsencePanel } = require('../handlers/absence'); // Ajuste o caminho se necessário
+const { checkAndSendAbsencePanel } = require('../commands/absence'); // Ajuste o caminho se necessário
 
 module.exports = {
   name: Events.ClientReady,
