@@ -54,20 +54,47 @@ const {
 } = require('../utils/managementPanel');
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
 const tellonymDestinatarios = new Map();
-const { handleAbsenceInteraction } = require('../commands/absence'); // Ajuste o caminho
+const { handleAbsenceInteraction } = require('../commands/absence');
 
 module.exports = {
   name: 'interactionCreate',
-  execute: async (interaction, client) => {
-    // Verifica se é o botão ou modal do nosso sistema de ausência
-    if (interaction.customId === 'staff_absence_btn' || interaction.customId === 'staff_absence_modal') {
-      return await handleAbsenceInteraction(interaction, client);
-    }
 
-    // Se não for, continua processando seus comandos normais
-    if (interaction.isChatInputCommand()) {
-       const command = client.commands.get(interaction.commandName);
-       if (command) await command.run(client, interaction);
+  execute: async (client, interaction) => {
+    try {
+      // Sistema de ausência
+      if (
+        interaction.isButton() &&
+        interaction.customId === 'staff_absence_btn'
+      ) {
+        return await handleAbsenceInteraction(interaction, client);
+      }
+
+      if (
+        interaction.isModalSubmit() &&
+        interaction.customId === 'staff_absence_modal'
+      ) {
+        return await handleAbsenceInteraction(interaction, client);
+      }
+
+      // Comandos Slash
+      if (interaction.isChatInputCommand()) {
+        const command = client.commands.get(interaction.commandName);
+
+        if (command) {
+          return await command.run(client, interaction);
+        }
+      }
+
+    } catch (error) {
+      console.error('❌ Erro no interactionCreate:', error);
+
+      // Só tenta responder se ainda não tiver respondido
+      if (!interaction.replied && !interaction.deferred) {
+        await interaction.reply({
+          content: '❌ Ocorreu um erro ao processar essa interação.',
+          ephemeral: true
+        }).catch(console.error);
+      }
     }
   }
 };
