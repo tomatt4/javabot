@@ -11,7 +11,7 @@ const {
   SeparatorSpacingSize,
   MessageFlags 
 } = require('discord.js');
-const { query } = require('./postgres'); // Ajuste o caminho para o seu arquivo postgres
+const { query } = require('./database'); // Ajuste o caminho para o seu arquivo postgres
 
 // Função para converter strings de tempo (ex: "3h", "5 min", "2 horas", "30m") em milissegundos
 function parseDuration(input) {
@@ -67,7 +67,7 @@ async function handleAbsenceInteraction(interaction, client) {
   if (interaction.isButton() && interaction.customId === 'staff_absence_btn') {
     const modal = new ModalBuilder()
       .setCustomId('staff_absence_modal')
-      .setTitle('Formulário de Ausência');
+      .setTitle('Ausência Cruel');
 
     const reasonInput = new TextInputBuilder()
       .setCustomId('absence_reason')
