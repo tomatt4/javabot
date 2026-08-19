@@ -54,7 +54,7 @@ const {
 } = require('../utils/managementPanel');
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
 const tellonymDestinatarios = new Map();
-const { handleAbsenceInteraction } = require('../handlers/absence'); // Ajuste o caminho
+const { handleAbsenceInteraction } = require('../commands/absence'); // Ajuste o caminho
 
 module.exports = {
   name: 'interactionCreate',

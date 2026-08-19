@@ -11,7 +11,7 @@ const {
   SeparatorSpacingSize,
   MessageFlags 
 } = require('discord.js');
-const { query } = require('./database'); // Ajuste o caminho para o seu arquivo postgres
+const { query } = require('../utils/database'); // Ajuste o caminho para o seu arquivo postgres
 
 // Função para converter strings de tempo (ex: "3h", "5 min", "2 horas", "30m") em milissegundos
 function parseDuration(input) {
