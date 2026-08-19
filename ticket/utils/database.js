@@ -189,6 +189,8 @@ async function ensureBaseData() {
     ON tickets (guild_id, owner_id, status)
   `);
 
+  await ensureAbsenseTable();
+
   await query(
     `
       INSERT INTO system_data (
@@ -574,16 +576,17 @@ async function ensureAbsenseTable() {
   await query(`
     CREATE TABLE IF NOT EXISTS staff_absences (
       id SERIAL PRIMARY KEY,
-      guild_id TEXT NOT NULL
-      user_id TEXT NOT NULL
-      reason TEXT NOT NULL
-      expires_at TIMESTAMPZ NOT NULL
-      created_at TIMESTAMPZ NOT NULL DEFAULT NOW()
-    )
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      reason TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    `);
   `) 
 }
 
 module.exports = {
+  query,
   ROOT,
   DATA_DIR,
   GUILDS_DIR,
