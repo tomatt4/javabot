@@ -581,8 +581,8 @@ async function ensureAbsenseTable() {
       reason TEXT NOT NULL,
       expires_at TIMESTAMPTZ NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    `);
-  `) 
+    )
+  `);
 }
 
 module.exports = {
