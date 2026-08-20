@@ -55,6 +55,7 @@ const {
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
 const tellonymDestinatarios = new Map();
 const { handleAbsenceInteraction } = require('../commands/absence');
+const { handleVipInteraction } = require('../commands/vip');
 
 function noticePayload(accentColor, title, body) {
   return buildContainerPayload({ title, body, accentColor });
@@ -1117,6 +1118,10 @@ module.exports = {
   async execute(client, interaction) {
     try {
       if (interaction.isChatInputCommand()) return handleCommand(client, interaction);
+
+      if (interaction.isButton() && interaction.customId.startsWith('vip_')) {
+        return await handleVipInteraction(interaction);
+      }
 
       if (
         (interaction.isButton() && interaction.customId === 'staff_absence_btn') ||

@@ -1,6 +1,7 @@
 const { Events } = require('discord.js');
 const logger = require('../utils/logger');
 const { checkAndSendAbsencePanel, restoreAbsenceTimers } = require('../commands/absence');
+const { restoreVipTimers } = require('../commands/vip');
 
 module.exports = {
   name: Events.ClientReady,
@@ -12,6 +13,7 @@ module.exports = {
     try {
       await checkAndSendAbsencePanel(client);
       await restoreAbsenceTimers(client);
+      await restoreVipTimers(client);
     } catch (error) {
       logger.error('Erro ao restaurar ausências:', error);
     }

@@ -190,6 +190,7 @@ async function ensureBaseData() {
   `);
 
   await ensureAbsenseTable();
+  await ensureVipTable();
 
   await query(
     `
@@ -585,6 +586,31 @@ async function ensureAbsenseTable() {
   `);
 }
 
+async function ensureVipTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS vip_assignments (
+      id SERIAL PRIMARY KEY,
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      role_id TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      decision_deadline TIMESTAMPTZ,
+      notified_at TIMESTAMPTZ,
+      removed_at TIMESTAMPTZ,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
+async function createVipAssignment(data) {
+  const result = await query(
+    `INSERT INTO vip_assignments (guild_id, user_id, role_id, expires_at) VALUES ($1, $2, $3, $4) RETURNING *`,
+    [data.guildId, data.userId, data.roleId, data.expiresAt]
+  );
+  return result.rows[0];
+}
+
 module.exports = {
   query,
   ROOT,
@@ -605,5 +631,6 @@ module.exports = {
   findOpenTicketByUser,
   addUserToBlacklist,
   incrementTicketCounter,
-  setLastPanelMessage
+  setLastPanelMessage,
+  createVipAssignment
 };
