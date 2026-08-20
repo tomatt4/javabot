@@ -13,6 +13,9 @@ const {
 } = require('discord.js');
 const { query } = require('../utils/database'); // Ajuste o caminho para o seu arquivo postgres
 
+const ABSENCE_LOG_CHANNEL_ID = '1539753657300418651';
+const MAX_TIMEOUT_MS = 2_147_483_647;
+
 // Função para converter strings de tempo (ex: "3h", "5 min", "2 horas", "30m") em milissegundos
 function parseDuration(input) {
   const regex = /(\d+)\s*(h|hr|hrs|hora|horas|m|min|mins|minuto|minutos|d|dia|dias)/gi;
@@ -33,6 +36,49 @@ function parseDuration(input) {
   }
 
   return totalMs > 0 ? totalMs : null;
+}
+
+async function finishAbsence(client, absence) {
+  const result = await query(
+    `DELETE FROM staff_absences WHERE id = $1 AND expires_at <= NOW() RETURNING user_id`,
+    [absence.id]
+  );
+
+  if (result.rowCount === 0) return;
+
+  const logChannel = await client.channels.fetch(ABSENCE_LOG_CHANNEL_ID).catch(() => null);
+  if (!logChannel) return;
+
+  const endContainer = new ContainerBuilder()
+    .setAccentColor(0x57F287)
+    .addTextDisplayComponents(
+      new TextDisplayBuilder().setContent('### 🟢 Ausência Finalizada'),
+      new TextDisplayBuilder().setContent(`O staff <@${absence.user_id}> retornou da ausência.`)
+    );
+
+  await logChannel.send({
+    content: `<@${absence.user_id}>`,
+    components: [endContainer],
+    flags: MessageFlags.IsComponentsV2
+  });
+}
+
+function scheduleAbsence(client, absence) {
+  const remainingMs = new Date(absence.expires_at).getTime() - Date.now();
+  const delay = Math.max(0, Math.min(remainingMs, MAX_TIMEOUT_MS));
+
+  setTimeout(async () => {
+    try {
+      if (remainingMs > MAX_TIMEOUT_MS) {
+        scheduleAbsence(client, absence);
+        return;
+      }
+
+      await finishAbsence(client, absence);
+    } catch (err) {
+      console.error('Erro ao finalizar ausência automaticamente:', err);
+    }
+  }, delay);
 }
 
 // 1. Enviar o Painel de Ausência utilizando Components V2 (Containers)
@@ -109,14 +155,17 @@ async function handleAbsenceInteraction(interaction) {
     const expiresAt = new Date(Date.now() + durationMs);
 
     // Salvar no Banco de Dados PostgreSQL
-    await query(
-      `INSERT INTO staff_absences (guild_id, user_id, reason, expires_at) VALUES ($1, $2, $3, $4)`,
+    const absenceResult = await query(
+      `INSERT INTO staff_absences (guild_id, user_id, reason, expires_at) VALUES ($1, $2, $3, $4) RETURNING id`,
       [interaction.guildId, interaction.user.id, reason, expiresAt]
     );
 
-    // Canal onde será postado o aviso
-    const logChannelId = '1539753657300418651'; // Substitua pelo ID do seu canal
-    const logChannel = interaction.guild.channels.cache.get(logChannelId);
+    const absence = {
+      id: absenceResult.rows[0].id,
+      user_id: interaction.user.id,
+      expires_at: expiresAt
+    };
+    const logChannel = await interaction.client.channels.fetch(ABSENCE_LOG_CHANNEL_ID).catch(() => null);
 
     const timestampRelative = `<t:${Math.floor(expiresAt.getTime() / 1000)}:R>`;
 
@@ -139,34 +188,17 @@ async function handleAbsenceInteraction(interaction) {
       content: `✅ Ausência registrada com sucesso! Seu retorno está marcado para ${timestampRelative}.` 
     });
 
-    // Agendar o término da ausência usando setTimeout
-    setTimeout(async () => {
-      try {
-        // Remover do banco
-        await query(
-          `DELETE FROM staff_absences WHERE guild_id = $1 AND user_id = $2 AND expires_at = $3`,
-          [interaction.guildId, interaction.user.id, expiresAt]
-        );
+    scheduleAbsence(interaction.client, absence);
+  }
+}
 
-        if (logChannel) {
-          // Container V2 para o aviso de Retorno
-          const endContainer = new ContainerBuilder()
-            .setAccentColor(0x57F287)
-            .addTextDisplayComponents(
-              new TextDisplayBuilder().setContent('### 🟢 Ausência Finalizada'),
-              new TextDisplayBuilder().setContent(`O staff ${interaction.user} retornou da ausência.`)
-            );
+async function restoreAbsenceTimers(client) {
+  const result = await query(
+    `SELECT id, user_id, expires_at FROM staff_absences ORDER BY expires_at ASC`
+  );
 
-          await logChannel.send({ 
-            content: `${interaction.user}`, 
-            components: [endContainer],
-            flags: MessageFlags.IsComponentsV2 
-          });
-        }
-      } catch (err) {
-        console.error('Erro ao finalizar ausência automaticamente:', err);
-      }
-    }, durationMs);
+  for (const absence of result.rows) {
+    scheduleAbsence(client, absence);
   }
 }
 
@@ -201,6 +233,7 @@ async function checkAndSendAbsencePanel(client) {
 module.exports = {
   sendAbsencePanel,
   handleAbsenceInteraction,
+  restoreAbsenceTimers,
   parseDuration,
   checkAndSendAbsencePanel
 };

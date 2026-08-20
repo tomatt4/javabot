@@ -1,6 +1,6 @@
 const { Events } = require('discord.js');
 const logger = require('../utils/logger');
-const { checkAndSendAbsencePanel } = require('../commands/absence'); // Ajuste o caminho se necessário
+const { checkAndSendAbsencePanel, restoreAbsenceTimers } = require('../commands/absence');
 
 module.exports = {
   name: Events.ClientReady,
@@ -11,8 +11,9 @@ module.exports = {
     // Verifica e envia o painel de ausência automaticamente ao iniciar
     try {
       await checkAndSendAbsencePanel(client);
+      await restoreAbsenceTimers(client);
     } catch (error) {
-      logger.error('Erro ao verificar/enviar o painel de ausência:', error);
+      logger.error('Erro ao restaurar ausências:', error);
     }
   },
 };
