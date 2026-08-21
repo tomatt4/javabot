@@ -24,13 +24,13 @@ module.exports = {
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(
-                    '# 📩 Tellonym Celestia\n' +
-                    'Bem vindo ao sistema de **Tellonym** da Celestia! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
+                    '# 📩 Tellonym Cruel\n' +
+                    'Bem vindo ao sistema de **Tellonym** do Cruel! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
                     'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
                 )
         );
 
-        // Botão abaixo da imagem
+        // Botão
         container.addActionRowComponents(
             new ActionRowBuilder()
                 .addComponents(

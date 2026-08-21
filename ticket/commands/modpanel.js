@@ -93,7 +93,15 @@ function buildPanel(client) {
 
   return asV2Message(buildContainerPayload({
     title: 'Painel de moderação',
-    body: 'Selecione uma ação abaixo para moderar um membro do servidor.',
+    body: [
+      'Use este painel para aplicar e consultar ações de moderação de forma rápida e organizada.',
+      '',
+      '**Como usar:** clique na ação desejada, selecione o membro e informe o motivo no formulário. Para castigos, informe também a duração em minutos.',
+      '',
+      '**Ações disponíveis:** Avisar envia uma notificação ao membro; Castigar aplica timeout; Expulsar remove o membro; Banir impede seu retorno; Histórico consulta os registros da moderação.',
+      '',
+      'O motivo fica registrado para consulta da staff e ajuda a manter decisões transparentes e consistentes. Use as ferramentas com responsabilidade e confirme sempre se a ação é adequada ao caso.'
+    ].join('\\n'),
     rows: [row],
     accentColor: client.config.defaults.accentColor
   }));
