@@ -556,8 +556,8 @@ async function handleTellonymInteraction(interaction) {
           if (canalStaff?.isTextBased()) {
             await canalStaff.send({
               content: [
-                '🔎 **Identificação de Tellonym anônimo**',
-                `**Quem enviou:** <@${interaction.user.id}> (${interaction.user.tag})`
+                '🔎 **Logs Tellonym anônimo**',
+                `**Quem enviou:** ${interaction.user.tag} (${interaction.user.id})`
               ].join('\n'),
               files: [
                 new AttachmentBuilder(imagemTellonym, {
@@ -573,7 +573,7 @@ async function handleTellonymInteraction(interaction) {
 
 
         return interaction.editReply(
-            '✅ Seu Tellonym foi enviado com sucesso.'
+            '✅ Seu Tellonym foi enviado com sucesso! Veja-o em <#1540467418130944040>.'
         );
     }
 }

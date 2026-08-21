@@ -25,8 +25,9 @@ module.exports = {
             new TextDisplayBuilder()
                 .setContent(
                     '# 📩 Tellonym Cruel\n' +
-                    'Bem vindo ao sistema de **Tellonym** do Cruel! O Tellonym foi criado no intuito de trazer entretenimento e diversão pro servidor, com você podendo enviar mensagens **anônimas** ou **públicas**!\n\n' +
-                    'Qualquer pergunta, abra Ticket. Clique no botão abaixo para começar!'
+                    'Boas vindas ao **Sistema de Tellonym**! Aqui você pode mandar mensagens tanto Públicas quanto **Anônimas** no Cruel, podendo se confessar, desabafar sem ninguém saber que é você e entre outros. Não tem uma maneira específica para usar, use o Tellonym por vontade própria(**desde que não viole as regras do servidor**)!\n\n' +
+                    '**Importante:** Qualquer Tellonym que tenha conteúdo inadequado, discurso de ódio ou xingamentos excessivos à alguém, se lembre, **os Tellonyns anônimos são enviados aos Logs da staff para revisão.**\n' +
+                    'Mas não se preocupe, qualquer staff que exibir o Tellonym anônimos a todo como forma de zoação receberá um aviso dos superiores, e em casos extremos, remoção permanente da staff. (Clique no botão abaixo para enviar um Tellonym)'
                 )
         );
 
