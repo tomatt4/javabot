@@ -13,6 +13,7 @@ const {
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
 
 const MOD_ROLE_ID = '1532532641646247946';
+const PUNISHMENT_LOG_CHANNEL_ID = '1524121879571599391';
 const DATA_PATH = path.join(__dirname, '..', 'data', 'moderation.json');
 
 function hasModRole(interaction) {
@@ -40,12 +41,53 @@ function saveRecord(record) {
   fs.writeFileSync(DATA_PATH, JSON.stringify(history.slice(0, 500), null, 2));
 }
 
+async function notifyPunishment(client, { guild, member, action, reason, moderatorId, punishedAt }) {
+  const timestamp = `<t:${Math.floor(punishedAt.getTime() / 1000)}:F>`;
+  const message = [
+    '## Registro de punição',
+    `**Usuário punido:** <@${member.id}> (${member.user.tag})`,
+    `**Punição:** ${action.toUpperCase()}`,
+    `**Motivo:** ${reason}`,
+    `**Aplicada por:** <@${moderatorId}>`,
+    `**Momento:** ${timestamp}`,
+    `**Servidor:** ${guild.name}`
+  ].join('\n');
+
+  if (action === 'warn') {
+    try {
+      await member.send({
+        content: [
+          `Você recebeu um **Aviso** no servidor **${guild.name}**.`,
+          `**Motivo:** ${reason}`,
+          `**Moderador:** ${interactionUserTag(guild, moderatorId)}`,
+          `**Momento:** ${timestamp}`
+        ].join('\n')
+      });
+      return;
+    } catch {}
+  }
+
+  const channel = await client.channels.fetch(PUNISHMENT_LOG_CHANNEL_ID).catch(() => null);
+  if (!channel?.isTextBased()) return;
+
+  await channel.send({
+    content: message,
+    allowedMentions: {
+      users: [member.id, moderatorId]
+    }
+  });
+}
+
+function interactionUserTag(guild, userId) {
+  return guild.client.users.cache.get(userId)?.tag ?? `<@${userId}>`;
+}
+
 function buildPanel(client) {
   const buttons = [
-    new ButtonBuilder().setCustomId('modpanel:warn').setLabel('Warn').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('modpanel:timeout').setLabel('Timeout').setStyle(ButtonStyle.Primary),
-    new ButtonBuilder().setCustomId('modpanel:kick').setLabel('Kick').setStyle(ButtonStyle.Danger),
-    new ButtonBuilder().setCustomId('modpanel:ban').setLabel('Ban').setStyle(ButtonStyle.Danger),
+    new ButtonBuilder().setCustomId('modpanel:warn').setLabel('Avisar').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('modpanel:timeout').setLabel('Castigar').setStyle(ButtonStyle.Primary),
+    new ButtonBuilder().setCustomId('modpanel:kick').setLabel('Expulsar').setStyle(ButtonStyle.Danger),
+    new ButtonBuilder().setCustomId('modpanel:ban').setLabel('Banir').setStyle(ButtonStyle.Danger),
     new ButtonBuilder().setCustomId('modpanel:history').setLabel('Histórico').setStyle(ButtonStyle.Secondary)
   ];
   const row = new ActionRowBuilder().addComponents(buttons);
@@ -173,7 +215,16 @@ async function handleModPanelInteraction(interaction) {
       await member.ban({ reason: auditReason });
     }
 
-    saveRecord({ action, guildId: interaction.guild.id, targetId: userId, moderatorId: interaction.user.id, reason, createdAt: new Date().toISOString() });
+    const punishedAt = new Date();
+    saveRecord({ action, guildId: interaction.guild.id, targetId: userId, moderatorId: interaction.user.id, reason, createdAt: punishedAt.toISOString() });
+    await notifyPunishment(interaction.client, {
+      guild: interaction.guild,
+      member,
+      action,
+      reason,
+      moderatorId: interaction.user.id,
+      punishedAt
+    }).catch(() => null);
     await interaction.reply({ content: `${action.toUpperCase()} aplicado com sucesso em ${member.user.tag}.`, ephemeral: true });
     return true;
   }
