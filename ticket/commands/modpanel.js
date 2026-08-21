@@ -101,7 +101,7 @@ function buildPanel(client) {
       '**Ações disponíveis:** Avisar envia uma notificação ao membro; Castigar aplica timeout; Expulsar remove o membro; Banir impede seu retorno; Histórico consulta os registros da moderação.',
       '',
       'O motivo fica registrado para consulta da staff e ajuda a manter decisões transparentes e consistentes. Use as ferramentas com responsabilidade e confirme sempre se a ação é adequada ao caso.'
-    ].join('\\n'),
+    ].join('\n'),
     rows: [row],
     accentColor: client.config.defaults.accentColor
   }));
