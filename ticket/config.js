@@ -15,7 +15,13 @@ module.exports = {
     panelDescription: 'Escolha uma opção abaixo para abrir seu atendimento.',
     ticketCategoryId: null,
     closeDeleteDelayMs: 5000,
-    preventMultipleOpenTickets: true
+    preventMultipleOpenTickets: true,
+    newMemberSuggestions: [
+      'Leia as regras do servidor e confira os canais importantes.',
+      'Apresente-se para a comunidade e conte um pouco sobre você.',
+      'Confira os canais de ajuda caso precise falar com a equipe.',
+      'Explore os canais do servidor para encontrar as atividades da comunidade.'
+    ]
   },
 
   transcript: {
