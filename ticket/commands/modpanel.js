@@ -49,8 +49,7 @@ async function notifyPunishment(client, { guild, member, action, reason, moderat
     `**Punição:** ${action.toUpperCase()}`,
     `**Motivo:** ${reason}`,
     `**Aplicada por:** <@${moderatorId}>`,
-    `**Momento:** ${timestamp}`,
-    `**Servidor:** ${guild.name}`
+    `**Momento:** ${timestamp}`
   ].join('\n');
 
   if (action === 'warn') {
