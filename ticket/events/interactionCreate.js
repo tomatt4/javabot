@@ -53,7 +53,7 @@ const {
   buildTeamTargetPanel
 } = require('../utils/managementPanel');
 const { buildContainerPayload, asV2Message } = require('../utils/ui');
-const tellonymDestinatarios = new Map();
+const TELLONYM_STAFF_CHANNEL_ID = '1524121752656019486';
 const { handleAbsenceInteraction } = require('../commands/absence');
 const { handleVipInteraction } = require('../commands/vip');
 const { handleModPanelInteraction } = require('../commands/modpanel');
@@ -340,10 +340,6 @@ async function handleTellonymInteraction(interaction) {
             interaction.customId === 'modal_tellonym_anon';
 
 
-        const destinatario =
-            tellonymDestinatarios.get(interaction.user.id);
-
-
         const mensagem =
             interaction.fields.getTextInputValue('input_mensagem');
 
@@ -518,17 +514,18 @@ async function handleTellonymInteraction(interaction) {
         );
 
 
+        const imagemTellonym = canvas.toBuffer('image/png');
         const attachment =
-            new AttachmentBuilder(
-                canvas.toBuffer('image/png'),
-                {
-                    name: 'tellonym-gerado.png'
-                }
-            );
+          new AttachmentBuilder(
+            imagemTellonym,
+            {
+              name: 'tellonym-gerado.png'
+            }
+          );
 
 
         const CANAL_TELLONYM =
-            '1536843185719083018';
+            '';
 
 
         const canal =
@@ -549,20 +546,30 @@ async function handleTellonymInteraction(interaction) {
         };
 
 
-        if (destinatario) {
-
-            payload.content =
-                `**Para:** <@${destinatario}>`;
-
-        }
-
-
         await canal.send(payload);
 
+        if (isAnonimo) {
+          const canalStaff = await interaction.guild.channels.fetch(
+            TELLONYM_STAFF_CHANNEL_ID
+          ).catch(() => null);
 
-        tellonymDestinatarios.delete(
-            interaction.user.id
-        );
+          if (canalStaff?.isTextBased()) {
+            await canalStaff.send({
+              content: [
+                '🔎 **Identificação de Tellonym anônimo**',
+                `**Quem enviou:** <@${interaction.user.id}> (${interaction.user.tag})`
+              ].join('\n'),
+              files: [
+                new AttachmentBuilder(imagemTellonym, {
+                  name: 'tellonym-anonimo-staff.png'
+                })
+              ],
+              allowedMentions: {
+                users: [interaction.user.id]
+              }
+            }).catch(() => null);
+          }
+        }
 
 
         return interaction.editReply(
